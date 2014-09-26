@@ -1,0 +1,7 @@
+Debug
+IPCH
+Wireshark
+
+*.opensdf
+*.sdf
+*.suo

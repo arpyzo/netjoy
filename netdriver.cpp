@@ -28,9 +28,9 @@ bool Netdriver::Init_NIC() {
 			}
 		}
 	}
-
+    Get_Friendly_Name();
     //return TRUE;
-
+/*
 	if ((fp = pcap_open(nics->next->name, 100, PCAP_OPENFLAG_PROMISCUOUS, 20, NULL, error_buffer)) == NULL) {
 		wxMessageBox(wxString::Format("Error opening source: %s", error_buffer));
 	} else {
@@ -55,7 +55,7 @@ bool Netdriver::Init_NIC() {
 
                   /* print ip addresses and udp ports */
     //printf("%d.%d.%d.%d.%d -> %d.%d.%d.%d.%d\n",
-    wxMessageBox(wxString::Format("%d.%d.%d.%d -> %d.%d.%d.%d\n",
+    /*wxMessageBox(wxString::Format("%d.%d.%d.%d -> %d.%d.%d.%d\n",
         ih->saddr.byte1,
         ih->saddr.byte2,
         ih->saddr.byte3,
@@ -74,5 +74,17 @@ bool Netdriver::Init_NIC() {
 		if (res == -1) {
 			wxMessageBox(wxString::Format("Error reading the packets: %s\n", pcap_geterr(fp)));
 		}
-	}
+	}*/
+}
+
+void Netdriver::Get_Friendly_Name() {
+    HMODULE IPHLPAPI_DLL;
+    // Use GUID
+
+        IPHLPAPI_DLL = LoadLibrary(TEXT("iphlpapi.dll"));
+    if (IPHLPAPI_DLL == NULL) {
+        wxMessageBox("Failed to load iphlpapi.dll");
+    } else {
+        wxMessageBox("Successfully loaded iphlpapi.dll");
+    }
 }

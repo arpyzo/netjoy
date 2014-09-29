@@ -35,6 +35,9 @@ class Netdriver {
     public:
         Netdriver();
         bool Init_NIC();
+
+    private:
+        void Get_Friendly_Name();
 };
 
 #endif

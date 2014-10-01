@@ -5,6 +5,7 @@
 #define HAVE_REMOTE
 
 #include <pcap.h>
+#include <iphlpapi.h>
 #include <wx/wx.h>
 
 /* 4 bytes IP address */
@@ -37,7 +38,7 @@ class Netdriver {
         bool Init_NIC();
 
     private:
-        void Get_Friendly_Name();
+        char *Get_Friendly_Name(char *guid);
 };
 
 #endif

@@ -26,9 +26,12 @@ bool Netdriver::Init_NIC() {
 			else {
 				wxMessageBox("(No description available)\n");
 			}
+            if (strncmp(nic->name, "\\Device\\NPF_", 12) == 0) {
+                wxMessageBox(Get_Friendly_Name(nic->name + 12));
+            }
 		}
 	}
-    Get_Friendly_Name();
+
     //return TRUE;
 /*
 	if ((fp = pcap_open(nics->next->name, 100, PCAP_OPENFLAG_PROMISCUOUS, 20, NULL, error_buffer)) == NULL) {
@@ -77,14 +80,19 @@ bool Netdriver::Init_NIC() {
 	}*/
 }
 
-void Netdriver::Get_Friendly_Name() {
-    HMODULE IPHLPAPI_DLL;
+char *Netdriver::Get_Friendly_Name(char *guid) {
+/*    HMODULE IPHLPAPI_DLL;
     // Use GUID
 
         IPHLPAPI_DLL = LoadLibrary(TEXT("iphlpapi.dll"));
     if (IPHLPAPI_DLL == NULL) {
         wxMessageBox("Failed to load iphlpapi.dll");
+        return NULL;
     } else {
         wxMessageBox("Successfully loaded iphlpapi.dll");
-    }
+    }*/
+
+    //ConvertInterfaceGuidToLuid
+      //  ConvertInterfaceLuidToAlias 
+    return NULL;
 }

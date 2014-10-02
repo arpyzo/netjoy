@@ -21,15 +21,15 @@ bool Netdriver::Init_NIC() {
 		for (nic = nics; nic; nic = nic->next) {
 			wxMessageBox(wxString::Format("\"%s\"", nic->name));
 			if (nic->description) {
-				//wxMessageBox(wxString::Format(" (%s)\n", nic->description));
+				wxMessageBox(wxString::Format(" (%s)\n", nic->description));
 			}
 			else {
 				wxMessageBox("(No description available)\n");
 			}
             if (strncmp(nic->name, "rpcap://\\Device\\NPF_", 20) == 0) {
                 //wxMessageBox(Get_Friendly_Name(nic->name + 20));
+                //Get_Friendly_Name(nic->name + 20);
             }
-            break;
 		}
 	}
 
@@ -98,16 +98,25 @@ char *Netdriver::Get_Friendly_Name(char *myguid) {
     CLSID lpclsid;
     NET_LUID luid;
     wchar_t alias[100];
-    char *otherguid = L"{F3B1B142-3858-474A-8B4E-0FE149DADCF0}";
-    LPCOLESTR olestr = OLESTR(otherguid);
-
+    //char *otherguid = L"{F3B1B142-3858-474A-8B4E-0FE149DADCF0}";
+    //LPCOLESTR olestr = OLESTR(otherguid);
+    LPCOLESTR olestr = OLESTR("{F3B1B142-3858-474A-8B4E-0FE149DADCF0}");
+    //wxMessageBox(wxString::Format("%s", olestr));
+    //LPCOLESTR olestr = OLESTR("Excel.Application");
 
     //HRESULT result = CLSIDFromProgID((LPCOLESTR)guid, &lpclsid);
     //HRESULT result = CLSIDFromProgID(OLESTR("{F3B1B142-3858-474A-8B4E-0FE149DADCF0}"), &lpclsid);
-    HRESULT result = CLSIDFromProgID(olestr, &lpclsid);
+    HRESULT result = CLSIDFromString(olestr, &lpclsid);
 
     if(FAILED(result)) {
         wxMessageBox("CLSIDFromProdID failed!");
+        if (result == CO_E_CLASSSTRING) {
+            wxMessageBox("CO_E_CLASSSTRING");
+        } else if (result == REGDB_E_CLASSNOTREG) {
+            wxMessageBox("REGDB_E_CLASSNOTREG");
+        }
+    } else {
+        wxMessageBox("CLSIDFromProdID succeeded");
     }
     ConvertInterfaceGuidToLuid(&lpclsid, &luid);
     ConvertInterfaceLuidToAlias(&luid, alias, 100);

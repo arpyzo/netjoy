@@ -6,6 +6,7 @@
 
 #include <pcap.h>
 #include <iphlpapi.h>
+#include <winerror.h>
 #include <wx/wx.h>
 
 /* 4 bytes IP address */

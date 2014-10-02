@@ -21,14 +21,15 @@ bool Netdriver::Init_NIC() {
 		for (nic = nics; nic; nic = nic->next) {
 			wxMessageBox(wxString::Format("\"%s\"", nic->name));
 			if (nic->description) {
-				wxMessageBox(wxString::Format(" (%s)\n", nic->description));
+				//wxMessageBox(wxString::Format(" (%s)\n", nic->description));
 			}
 			else {
 				wxMessageBox("(No description available)\n");
 			}
-            if (strncmp(nic->name, "\\Device\\NPF_", 12) == 0) {
-                wxMessageBox(Get_Friendly_Name(nic->name + 12));
+            if (strncmp(nic->name, "rpcap://\\Device\\NPF_", 20) == 0) {
+                //wxMessageBox(Get_Friendly_Name(nic->name + 20));
             }
+            break;
 		}
 	}
 
@@ -80,7 +81,7 @@ bool Netdriver::Init_NIC() {
 	}*/
 }
 
-char *Netdriver::Get_Friendly_Name(char *guid) {
+char *Netdriver::Get_Friendly_Name(char *myguid) {
 /*    HMODULE IPHLPAPI_DLL;
     // Use GUID
 
@@ -92,7 +93,24 @@ char *Netdriver::Get_Friendly_Name(char *guid) {
         wxMessageBox("Successfully loaded iphlpapi.dll");
     }*/
 
-    //ConvertInterfaceGuidToLuid
-      //  ConvertInterfaceLuidToAlias 
+    wxMessageBox(wxString::Format("GUID String: \"\%s\"", myguid));
+
+    CLSID lpclsid;
+    NET_LUID luid;
+    wchar_t alias[100];
+    char *otherguid = L"{F3B1B142-3858-474A-8B4E-0FE149DADCF0}";
+    LPCOLESTR olestr = OLESTR(otherguid);
+
+
+    //HRESULT result = CLSIDFromProgID((LPCOLESTR)guid, &lpclsid);
+    //HRESULT result = CLSIDFromProgID(OLESTR("{F3B1B142-3858-474A-8B4E-0FE149DADCF0}"), &lpclsid);
+    HRESULT result = CLSIDFromProgID(olestr, &lpclsid);
+
+    if(FAILED(result)) {
+        wxMessageBox("CLSIDFromProdID failed!");
+    }
+    ConvertInterfaceGuidToLuid(&lpclsid, &luid);
+    ConvertInterfaceLuidToAlias(&luid, alias, 100);
+    wxMessageBox(wxString::Format("ALIAS: %s", alias));
     return NULL;
 }

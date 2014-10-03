@@ -37,9 +37,7 @@ class Netdriver {
     public:
         Netdriver();
         bool Init_NIC();
-
-    private:
-        char *Get_Friendly_Name(char *guid);
+        void Toggle_Capture();
 };
 
 #endif

@@ -7,7 +7,9 @@
 
 enum {
     MENU_ABOUT,
-    MENU_QUIT
+    MENU_QUIT,
+
+    PANEL_CAPTURE
 };
 
 /************************** Frame **********************************/
@@ -19,6 +21,7 @@ class Frame: public wxFrame {
 
         void Menu_About(wxCommandEvent &event);
         void Menu_Quit(wxCommandEvent &event);
+        void Panel_Capture(wxCommandEvent &event);
 
     private:
         Netdriver *netdriver;

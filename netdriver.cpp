@@ -81,45 +81,8 @@ bool Netdriver::Init_NIC() {
 	}*/
 }
 
-char *Netdriver::Get_Friendly_Name(char *myguid) {
-/*    HMODULE IPHLPAPI_DLL;
-    // Use GUID
-
-        IPHLPAPI_DLL = LoadLibrary(TEXT("iphlpapi.dll"));
-    if (IPHLPAPI_DLL == NULL) {
-        wxMessageBox("Failed to load iphlpapi.dll");
-        return NULL;
-    } else {
-        wxMessageBox("Successfully loaded iphlpapi.dll");
-    }*/
-
-    wxMessageBox(wxString::Format("GUID String: \"\%s\"", myguid));
-
-    CLSID lpclsid;
-    NET_LUID luid;
-    wchar_t alias[100];
-    //char *otherguid = L"{F3B1B142-3858-474A-8B4E-0FE149DADCF0}";
-    //LPCOLESTR olestr = OLESTR(otherguid);
-    LPCOLESTR olestr = OLESTR("{F3B1B142-3858-474A-8B4E-0FE149DADCF0}");
-    //wxMessageBox(wxString::Format("%s", olestr));
-    //LPCOLESTR olestr = OLESTR("Excel.Application");
-
-    //HRESULT result = CLSIDFromProgID((LPCOLESTR)guid, &lpclsid);
-    //HRESULT result = CLSIDFromProgID(OLESTR("{F3B1B142-3858-474A-8B4E-0FE149DADCF0}"), &lpclsid);
-    HRESULT result = CLSIDFromString(olestr, &lpclsid);
-
-    if(FAILED(result)) {
-        wxMessageBox("CLSIDFromProdID failed!");
-        if (result == CO_E_CLASSSTRING) {
-            wxMessageBox("CO_E_CLASSSTRING");
-        } else if (result == REGDB_E_CLASSNOTREG) {
-            wxMessageBox("REGDB_E_CLASSNOTREG");
-        }
-    } else {
-        wxMessageBox("CLSIDFromProdID succeeded");
-    }
-    ConvertInterfaceGuidToLuid(&lpclsid, &luid);
-    ConvertInterfaceLuidToAlias(&luid, alias, 100);
-    wxMessageBox(wxString::Format("ALIAS: %s", alias));
-    return NULL;
+void Netdriver::Toggle_Capture() {
+    wxMessageBox("Toggling capture");
 }
+
+

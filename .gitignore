@@ -5,3 +5,5 @@ Wireshark
 *.opensdf
 *.sdf
 *.suo
+
+win_nic_details.cpp

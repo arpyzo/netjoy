@@ -7,6 +7,7 @@ IMPLEMENT_APP(App)
 BEGIN_EVENT_TABLE(Frame,wxFrame)
     EVT_MENU    (MENU_ABOUT, Frame::Menu_About)
     EVT_MENU    (MENU_QUIT,  Frame::Menu_Quit)
+    EVT_BUTTON  (PANEL_CAPTURE, Frame::Panel_Capture)
 END_EVENT_TABLE()
 
 Frame::Frame() 
@@ -26,8 +27,11 @@ Frame::Frame()
     nic_choice->Append("Item 1");
     nic_choice->Append("Item 2");
     nic_choice->SetSelection(0);
+
+    wxButton *capture_button = new wxButton(panel, PANEL_CAPTURE, "Start");
     
     panel_hsizer->Add(nic_choice, 0, wxALL, 10);
+    panel_hsizer->Add(capture_button, 0, wxALL, 10);
     panel->SetSizer(panel_hsizer);
     main_vsizer->Add(panel, 0, wxEXPAND);
     
@@ -64,6 +68,10 @@ void Frame::Menu_About(wxCommandEvent &WXUNUSED(event)) {
 
 void Frame::Menu_Quit(wxCommandEvent &WXUNUSED(event)) {
     Close(TRUE);
+}
+
+void Frame::Panel_Capture(wxCommandEvent &WXUNUSED(event)) {
+    netdriver->Toggle_Capture();
 }
 
 /*************************** App_Class ****************************/

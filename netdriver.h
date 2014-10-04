@@ -36,7 +36,7 @@ typedef struct ip_header{
 class Netdriver {
     public:
         Netdriver();
-        bool Init_NIC();
+        char **Get_NIC_List();
         void Toggle_Capture();
 };
 

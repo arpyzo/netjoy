@@ -23,7 +23,7 @@ Frame::Frame()
     wxBoxSizer *panel_hsizer = new wxBoxSizer(wxHORIZONTAL);
     
     wxChoice *nic_choice = new wxChoice(panel, wxID_ANY);
-    //nic_choice->Append(netdriver->Get_NIC_List());
+    nic_choice->Append(netdriver->Get_NIC_List());
     nic_choice->Append("Item 1");
     nic_choice->Append("Item 2");
     nic_choice->SetSelection(0);
@@ -45,7 +45,7 @@ void Frame::Setup_Netdriver() {
     //if (!Init_NIC()) {
     //    return FALSE;
     //}
-    netdriver->Init_NIC();
+    //netdriver->Init_NIC();
 }
 
 void Frame::Setup_Menu() {

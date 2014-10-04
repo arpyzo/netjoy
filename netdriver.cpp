@@ -6,17 +6,13 @@ Netdriver::Netdriver() {
 
 }
 
-bool Netdriver::Init_NIC() {
+char **Netdriver::Get_NIC_List() {
     pcap_if_t *nics, *nic;
-	pcap_t *fp;
 	char error_buffer[PCAP_ERRBUF_SIZE];
-	struct pcap_pkthdr *header;
-	const u_char *pkt_data;
-	int res;
 
 	if (pcap_findalldevs_ex(PCAP_SRC_IF_STRING, NULL, &nics, error_buffer) == -1) {
 		wxMessageBox("Failed to retrieve network card list!");
-        return FALSE;
+        return NULL;
 	} else {
 		for (nic = nics; nic; nic = nic->next) {
 			wxMessageBox(wxString::Format("\"%s\"", nic->name));
@@ -26,15 +22,17 @@ bool Netdriver::Init_NIC() {
 			else {
 				wxMessageBox("(No description available)\n");
 			}
-            if (strncmp(nic->name, "rpcap://\\Device\\NPF_", 20) == 0) {
-                //wxMessageBox(Get_Friendly_Name(nic->name + 20));
-                //Get_Friendly_Name(nic->name + 20);
-            }
 		}
 	}
 
-    //return TRUE;
-/*
+    return NULL;
+}
+
+/*	pcap_t *fp;
+    const u_char *pkt_data;
+    struct pcap_pkthdr *header;
+    int res;
+
 	if ((fp = pcap_open(nics->next->name, 100, PCAP_OPENFLAG_PROMISCUOUS, 20, NULL, error_buffer)) == NULL) {
 		wxMessageBox(wxString::Format("Error opening source: %s", error_buffer));
 	} else {
@@ -79,7 +77,7 @@ bool Netdriver::Init_NIC() {
 			wxMessageBox(wxString::Format("Error reading the packets: %s\n", pcap_geterr(fp)));
 		}
 	}*/
-}
+
 
 void Netdriver::Toggle_Capture() {
     wxMessageBox("Toggling capture");

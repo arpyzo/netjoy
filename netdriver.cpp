@@ -7,8 +7,8 @@ Netdriver::Netdriver() {
 }
 
 char **Netdriver::Get_NIC_List() {
-    char **nic_list = (char **)malloc(10);
-    char *nic_list_pointer;
+    char **nic_list = (char **)malloc(sizeof(char *) * 10);
+    char **nic_list_pointer = nic_list;
     pcap_if_t *nics, *nic;
 	char error_buffer[PCAP_ERRBUF_SIZE];
 
@@ -16,22 +16,16 @@ char **Netdriver::Get_NIC_List() {
 		wxMessageBox("Failed to retrieve network card list!");
         return NULL;
 	} else {
-        //nic_list_pointer = nic_list[0];
-        int i = 0;
 		for (nic = nics; nic; nic = nic->next) {
-            //*nic_list_pointer = *nic->name;
-            nic_list[i] = nic->name;
-            //wxMessageBox()
-            //nic_list_pointer++;
-            i++;
-
-			wxMessageBox(wxString::Format("\"%s\"", nic->name));
 			if (nic->description) {
-				wxMessageBox(wxString::Format(" (%s)\n", nic->description));
+                *nic_list_pointer = nic->description;
+				//wxMessageBox(wxString::Format(" (%s)\n", nic->description));
 			}
 			else {
-				wxMessageBox("(No description available)\n");
+                *nic_list_pointer = nic->name;
+				//wxMessageBox("(No description available)\n");
 			}
+            nic_list_pointer++;
 		}
 	}
 

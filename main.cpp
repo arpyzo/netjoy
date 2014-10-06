@@ -74,6 +74,10 @@ void Frame::Panel_Capture(wxCommandEvent &WXUNUSED(event)) {
     netdriver->Toggle_Capture();
 }
 
+Frame::~Frame() {
+    delete netdriver;
+}
+
 /*************************** App_Class ****************************/
 bool App::OnInit() {
     Frame *main_frame = new Frame();

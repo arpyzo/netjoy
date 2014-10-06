@@ -38,6 +38,7 @@ class Netdriver {
         Netdriver();
         char **Get_NIC_List();
         void Toggle_Capture();
+        void Packet_Handler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data);
 };
 
 #endif

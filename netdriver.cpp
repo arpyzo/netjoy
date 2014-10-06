@@ -14,6 +14,7 @@ char **Netdriver::Get_NIC_List() {
 
 	if (pcap_findalldevs_ex(PCAP_SRC_IF_STRING, NULL, &nics, error_buffer) == -1) {
 		wxMessageBox("Failed to retrieve network card list!");
+        pcap_freealldevs(nics);
         return NULL;
 	} else {
 		for (nic = nics; nic; nic = nic->next) {
@@ -29,6 +30,7 @@ char **Netdriver::Get_NIC_List() {
 		}
 	}
 
+    //pcap_freealldevs(nics);   Need to do this somewhere
     return nic_list;
 }
 
@@ -85,6 +87,10 @@ char **Netdriver::Get_NIC_List() {
 
 void Netdriver::Toggle_Capture() {
     wxMessageBox("Toggling capture");
+        //pcap_loop(adhandle, 0, packet_handler, NULL);
+}
+
+void Netdriver::Packet_Handler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data) {
 }
 
 

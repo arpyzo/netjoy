@@ -16,6 +16,7 @@ enum {
 class Frame: public wxFrame {
     public:
         Frame();
+        ~Frame();
         void Setup_Netdriver();
         void Setup_Menu();
 

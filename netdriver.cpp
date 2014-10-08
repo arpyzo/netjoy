@@ -3,7 +3,11 @@
 
 /***************************** NetDriver ******************************/
 Netdriver::Netdriver() {
+    Get_NIC_List();
+}
 
+Netdriver::~Netdriver() {
+    Free_NIC_List();
 }
 
 char **Netdriver::Get_NIC_Names() {

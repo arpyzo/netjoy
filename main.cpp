@@ -40,7 +40,6 @@ Frame::Frame()
 
 void Frame::Setup_Netdriver() {
     netdriver = new Netdriver();
-    netdriver->Get_NIC_List();
 }
 
 void Frame::Setup_Menu() {
@@ -70,7 +69,6 @@ void Frame::Panel_Capture(wxCommandEvent &WXUNUSED(event)) {
 }
 
 Frame::~Frame() {
-    netdriver->Free_NIC_List();
     delete netdriver;
 }
 

@@ -36,15 +36,17 @@ typedef struct ip_header{
 class Netdriver {
     public:
         Netdriver();
+        ~Netdriver();
 
-        void Get_NIC_List();
-        void Free_NIC_List();
         char **Get_NIC_Names();
 
         void Toggle_Capture();
         void Packet_Handler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data);
 
     private:
+        void Get_NIC_List();
+        void Free_NIC_List();
+
         pcap_if_t *nic_list;
         char** nic_names;
 };

@@ -6,32 +6,42 @@ Netdriver::Netdriver() {
 
 }
 
-char **Netdriver::Get_NIC_List() {
-    char **nic_list = (char **)malloc(sizeof(char *) * 10);
-    char **nic_list_pointer = nic_list;
-    pcap_if_t *nics, *nic;
-	char error_buffer[PCAP_ERRBUF_SIZE];
-
-	if (pcap_findalldevs_ex(PCAP_SRC_IF_STRING, NULL, &nics, error_buffer) == -1) {
-		wxMessageBox("Failed to retrieve network card list!");
-        pcap_freealldevs(nics);
+char **Netdriver::Get_NIC_Names() {
+    if (!nic_list) {
         return NULL;
-	} else {
-		for (nic = nics; nic; nic = nic->next) {
-			if (nic->description) {
-                *nic_list_pointer = nic->description;
-				//wxMessageBox(wxString::Format(" (%s)\n", nic->description));
-			}
-			else {
-                *nic_list_pointer = nic->name;
-				//wxMessageBox("(No description available)\n");
-			}
-            nic_list_pointer++;
+    }
+
+    //char **nic_names = (char **)malloc(sizeof(char *) * 10);
+    nic_names = new char*[10];
+    char **nic_names_pointer = nic_names;
+
+	for (pcap_if_t *nic = nic_list; nic; nic = nic->next) {
+		if (nic->description) {
+            *nic_names_pointer = nic->description;
+			//wxMessageBox(wxString::Format(" (%s)\n", nic->description));
 		}
+		else {
+            *nic_names_pointer = nic->name;
+			//wxMessageBox("(No description available)\n");
+		}
+        nic_names_pointer++;
 	}
 
-    //pcap_freealldevs(nics);   Need to do this somewhere
-    return nic_list;
+    return nic_names;
+}
+
+void Netdriver::Get_NIC_List() {
+    char error_buffer[PCAP_ERRBUF_SIZE];
+
+	if (pcap_findalldevs_ex(PCAP_SRC_IF_STRING, NULL, &nic_list, error_buffer) == -1) {
+		wxMessageBox("Failed to retrieve network card list!");
+        pcap_freealldevs(nic_list);
+    }
+}
+
+void Netdriver::Free_NIC_List() {
+    pcap_freealldevs(nic_list);
+    delete nic_names;
 }
 
 /*	pcap_t *fp;

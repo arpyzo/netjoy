@@ -23,9 +23,7 @@ Frame::Frame()
     wxBoxSizer *panel_hsizer = new wxBoxSizer(wxHORIZONTAL);
     
     wxChoice *nic_choice = new wxChoice(panel, wxID_ANY);
-    nic_choice->Append(wxArrayString(2, (const char **)netdriver->Get_NIC_List()));
-    nic_choice->Append("Item 1");
-    nic_choice->Append("Item 2");
+    nic_choice->Append(wxArrayString(2, (const char **)netdriver->Get_NIC_Names()));
     nic_choice->SetSelection(0);
 
     wxButton *capture_button = new wxButton(panel, PANEL_CAPTURE, "Start");
@@ -42,10 +40,7 @@ Frame::Frame()
 
 void Frame::Setup_Netdriver() {
     netdriver = new Netdriver();
-    //if (!Init_NIC()) {
-    //    return FALSE;
-    //}
-    //netdriver->Init_NIC();
+    netdriver->Get_NIC_List();
 }
 
 void Frame::Setup_Menu() {
@@ -75,6 +70,7 @@ void Frame::Panel_Capture(wxCommandEvent &WXUNUSED(event)) {
 }
 
 Frame::~Frame() {
+    netdriver->Free_NIC_List();
     delete netdriver;
 }
 

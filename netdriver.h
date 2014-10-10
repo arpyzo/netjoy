@@ -7,7 +7,8 @@
 #include <pcap.h>
 #include <iphlpapi.h>
 #include <winerror.h>
-#include <wx/wx.h>
+//#include <wx/wx.h>
+#include "logger.h"
 
 /* 4 bytes IP address */
 typedef struct ip_address{
@@ -49,6 +50,8 @@ class Netdriver {
 
         pcap_if_t *nic_list;
         char** nic_names;
+
+        Logger *logger;
 };
 
 #endif

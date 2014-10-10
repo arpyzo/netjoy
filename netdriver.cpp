@@ -3,11 +3,13 @@
 
 /***************************** NetDriver ******************************/
 Netdriver::Netdriver() {
+    logger = new Logger();
     Get_NIC_List();
 }
 
 Netdriver::~Netdriver() {
     Free_NIC_List();
+    delete logger;
 }
 
 char **Netdriver::Get_NIC_Names() {
@@ -15,18 +17,17 @@ char **Netdriver::Get_NIC_Names() {
         return NULL;
     }
 
-    //char **nic_names = (char **)malloc(sizeof(char *) * 10);
     nic_names = new char*[10];
     char **nic_names_pointer = nic_names;
 
 	for (pcap_if_t *nic = nic_list; nic; nic = nic->next) {
 		if (nic->description) {
             *nic_names_pointer = nic->description;
-			//wxMessageBox(wxString::Format(" (%s)\n", nic->description));
+			logger->Debug(nic->description);
 		}
 		else {
             *nic_names_pointer = nic->name;
-			//wxMessageBox("(No description available)\n");
+			logger->Debug("No NIC description available");
 		}
         nic_names_pointer++;
 	}
@@ -38,7 +39,7 @@ void Netdriver::Get_NIC_List() {
     char error_buffer[PCAP_ERRBUF_SIZE];
 
 	if (pcap_findalldevs_ex(PCAP_SRC_IF_STRING, NULL, &nic_list, error_buffer) == -1) {
-		wxMessageBox("Failed to retrieve network card list!");
+		logger->Error("Failed to retrieve network card list!");
         pcap_freealldevs(nic_list);
     }
 }
@@ -100,7 +101,7 @@ void Netdriver::Free_NIC_List() {
 
 
 void Netdriver::Toggle_Capture() {
-    wxMessageBox("Toggling capture");
+    logger->Info("Toggling capture");
         //pcap_loop(adhandle, 0, packet_handler, NULL);
 }
 

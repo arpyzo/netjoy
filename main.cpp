@@ -22,7 +22,7 @@ Frame::Frame()
     wxBoxSizer *main_vsizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer *panel_hsizer = new wxBoxSizer(wxHORIZONTAL);
     
-    wxChoice *nic_choice = new wxChoice(panel, wxID_ANY);
+    nic_choice = new wxChoice(panel, wxID_ANY);
     nic_choice->Append(wxArrayString(2, (const char **)netdriver->Get_NIC_Names()));
     nic_choice->SetSelection(0);
 
@@ -65,7 +65,7 @@ void Frame::Menu_Quit(wxCommandEvent &WXUNUSED(event)) {
 }
 
 void Frame::Panel_Capture(wxCommandEvent &WXUNUSED(event)) {
-    netdriver->Toggle_Capture();
+    netdriver->Toggle_Capture(nic_choice->GetString(nic_choice->GetCurrentSelection()).char_str());
 }
 
 Frame::~Frame() {

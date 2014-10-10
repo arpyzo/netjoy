@@ -41,12 +41,13 @@ class Netdriver {
 
         char **Get_NIC_Names();
 
-        void Toggle_Capture();
+        void Toggle_Capture(char *nic_name);
         void Packet_Handler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data);
 
     private:
         void Get_NIC_List();
         void Free_NIC_List();
+        void NIC_Open(char *nic_name);
 
         pcap_if_t *nic_list;
         char** nic_names;

@@ -49,6 +49,21 @@ void Netdriver::Free_NIC_List() {
     delete nic_names;
 }
 
+void Netdriver::NIC_Open(char *nic_name) {
+ /*   if ( (adhandle= pcap_open(d->name,          // name of the device
+                              65536,            // portion of the packet to capture
+                                                // 65536 guarantees that the whole packet will be captured on all the link layers
+                              PCAP_OPENFLAG_PROMISCUOUS,    // promiscuous mode
+                              1000,             // read timeout
+                              NULL,             // authentication on the remote machine
+                              errbuf            // error buffer
+                              ) ) == NULL)
+    {
+        fprintf(stderr,"\nUnable to open the adapter. %s is not supported by WinPcap\n", d->name);
+        return -1;
+    }*/
+}
+
 /*	pcap_t *fp;
     const u_char *pkt_data;
     struct pcap_pkthdr *header;
@@ -100,9 +115,10 @@ void Netdriver::Free_NIC_List() {
 	}*/
 
 
-void Netdriver::Toggle_Capture() {
+void Netdriver::Toggle_Capture(char *nic_name) {
     logger->Info("Toggling capture");
-        //pcap_loop(adhandle, 0, packet_handler, NULL);
+    logger->Info(nic_name);
+    //pcap_loop(adhandle, 0, packet_handler, NULL);
 }
 
 void Netdriver::Packet_Handler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data) {

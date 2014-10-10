@@ -27,6 +27,8 @@ class Frame: public wxFrame {
     private:
         Netdriver *netdriver;
 
+        wxChoice *nic_choice;
+
     DECLARE_EVENT_TABLE()
 };
 

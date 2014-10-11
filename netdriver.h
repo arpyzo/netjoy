@@ -47,10 +47,13 @@ class Netdriver {
     private:
         void Get_NIC_List();
         void Free_NIC_List();
-        void NIC_Open(char *nic_name);
+        bool NIC_Open(char *nic_name);
 
         pcap_if_t *nic_list;
         char** nic_names;
+        pcap_t *nic_handle;
+
+        char error_buffer[PCAP_ERRBUF_SIZE];
 
         Logger *logger;
 };

@@ -22,7 +22,8 @@ char **Netdriver::Get_NIC_Names() {
 
 	for (pcap_if_t *nic = nic_list; nic; nic = nic->next) {
 		if (nic->description) {
-            *nic_names_pointer = nic->description;
+            //*nic_names_pointer = nic->description;
+            *nic_names_pointer = nic->name;
 			logger->Debug(nic->description);
 		}
 		else {
@@ -36,7 +37,7 @@ char **Netdriver::Get_NIC_Names() {
 }
 
 void Netdriver::Get_NIC_List() {
-    char error_buffer[PCAP_ERRBUF_SIZE];
+    //char error_buffer[PCAP_ERRBUF_SIZE];
 
 	if (pcap_findalldevs_ex(PCAP_SRC_IF_STRING, NULL, &nic_list, error_buffer) == -1) {
 		logger->Error("Failed to retrieve network card list!");
@@ -49,19 +50,16 @@ void Netdriver::Free_NIC_List() {
     delete nic_names;
 }
 
-void Netdriver::NIC_Open(char *nic_name) {
- /*   if ( (adhandle= pcap_open(d->name,          // name of the device
-                              65536,            // portion of the packet to capture
-                                                // 65536 guarantees that the whole packet will be captured on all the link layers
-                              PCAP_OPENFLAG_PROMISCUOUS,    // promiscuous mode
-                              1000,             // read timeout
-                              NULL,             // authentication on the remote machine
-                              errbuf            // error buffer
-                              ) ) == NULL)
-    {
-        fprintf(stderr,"\nUnable to open the adapter. %s is not supported by WinPcap\n", d->name);
-        return -1;
-    }*/
+bool Netdriver::NIC_Open(char *nic_name) {
+    logger->Debug("Attempting to open");
+    logger->Debug(nic_name);
+    if ((nic_handle = pcap_open(nic_name, 65536, PCAP_OPENFLAG_PROMISCUOUS, 1000, NULL, error_buffer)) == NULL) {
+        logger->Error("Unable to open network adapter");
+        return false;
+    }
+
+    logger->Info("Successfully opened network adapter");
+    return true;
 }
 
 /*	pcap_t *fp;
@@ -116,8 +114,9 @@ void Netdriver::NIC_Open(char *nic_name) {
 
 
 void Netdriver::Toggle_Capture(char *nic_name) {
-    logger->Info("Toggling capture");
-    logger->Info(nic_name);
+    //logger->Info("Toggling capture");
+    //logger->Info(nic_name);
+    NIC_Open(nic_name);
     //pcap_loop(adhandle, 0, packet_handler, NULL);
 }
 

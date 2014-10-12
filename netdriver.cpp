@@ -117,10 +117,12 @@ void Netdriver::Toggle_Capture(char *nic_name) {
     //logger->Info("Toggling capture");
     //logger->Info(nic_name);
     NIC_Open(nic_name);
-    //pcap_loop(adhandle, 0, packet_handler, NULL);
+    pcap_loop(nic_handle, 0, Packet_Handler, NULL);
 }
 
 void Netdriver::Packet_Handler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data) {
+    //logger->Debug("PACKET!");
+    exit(12);
 }
 
 

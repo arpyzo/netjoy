@@ -7,9 +7,9 @@
 class Logger {
     public:
         Logger();
-        void Debug(char *message);
-        void Info(char *message);
-        void Error(char *message);
+        static void Debug(char *message);
+        static void Info(char *message);
+        static void Error(char *message);
 
 };
 

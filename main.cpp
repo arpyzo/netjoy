@@ -11,7 +11,7 @@ BEGIN_EVENT_TABLE(Frame,wxFrame)
 END_EVENT_TABLE()
 
 Frame::Frame() 
-: wxFrame((wxFrame *)NULL, -1, "wxWidgets Template", wxPoint(100,100), wxSize(300,200)) {
+: wxFrame((wxFrame *)NULL, -1, "NetJoy", wxPoint(200,200), wxSize(500,200)) {
     SetIcon(wxIcon("NetJoy.ico"));
 
     Setup_Netdriver();

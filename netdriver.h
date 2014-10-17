@@ -55,7 +55,7 @@ class Netdriver {
 
         char error_buffer[PCAP_ERRBUF_SIZE];
 
-        Logger *logger;
+        //Logger *logger;
 };
 
 #endif

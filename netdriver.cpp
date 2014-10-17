@@ -3,13 +3,13 @@
 
 /***************************** NetDriver ******************************/
 Netdriver::Netdriver() {
-    logger = new Logger();
+    //logger = new Logger();
     Get_NIC_List();
 }
 
 Netdriver::~Netdriver() {
     Free_NIC_List();
-    delete logger;
+    //delete logger;
 }
 
 char **Netdriver::Get_NIC_Names() {
@@ -24,11 +24,11 @@ char **Netdriver::Get_NIC_Names() {
 		if (nic->description) {
             //*nic_names_pointer = nic->description;
             *nic_names_pointer = nic->name;
-			logger->Debug(nic->description);
+			Logger::Debug(nic->description);
 		}
 		else {
             *nic_names_pointer = nic->name;
-			logger->Debug("No NIC description available");
+			Logger::Debug("No NIC description available");
 		}
         nic_names_pointer++;
 	}
@@ -40,7 +40,7 @@ void Netdriver::Get_NIC_List() {
     //char error_buffer[PCAP_ERRBUF_SIZE];
 
 	if (pcap_findalldevs_ex(PCAP_SRC_IF_STRING, NULL, &nic_list, error_buffer) == -1) {
-		logger->Error("Failed to retrieve network card list!");
+		Logger::Error("Failed to retrieve network card list!");
         pcap_freealldevs(nic_list);
     }
 }
@@ -51,14 +51,14 @@ void Netdriver::Free_NIC_List() {
 }
 
 bool Netdriver::NIC_Open(char *nic_name) {
-    logger->Debug("Attempting to open");
-    logger->Debug(nic_name);
+    Logger::Debug("Attempting to open");
+    Logger::Debug(nic_name);
     if ((nic_handle = pcap_open(nic_name, 65536, PCAP_OPENFLAG_PROMISCUOUS, 1000, NULL, error_buffer)) == NULL) {
-        logger->Error("Unable to open network adapter");
+        Logger::Error("Unable to open network adapter");
         return false;
     }
 
-    logger->Info("Successfully opened network adapter");
+    Logger::Info("Successfully opened network adapter");
     return true;
 }
 
@@ -121,8 +121,7 @@ void Netdriver::Toggle_Capture(char *nic_name) {
 }
 
 void Netdriver::Packet_Handler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data) {
-    //logger->Debug("PACKET!");
-    exit(12);
+    Logger::Debug("PACKET!");
 }
 
 

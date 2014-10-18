@@ -24,11 +24,11 @@ char **Netdriver::Get_NIC_Names() {
 		if (nic->description) {
             //*nic_names_pointer = nic->description;
             *nic_names_pointer = nic->name;
-			Logger::Debug(nic->description);
+			Logger::Get_Instance()->Debug(nic->description);
 		}
 		else {
             *nic_names_pointer = nic->name;
-			Logger::Debug("No NIC description available");
+			Logger::Get_Instance()->Debug("No NIC description available");
 		}
         nic_names_pointer++;
 	}
@@ -40,7 +40,7 @@ void Netdriver::Get_NIC_List() {
     //char error_buffer[PCAP_ERRBUF_SIZE];
 
 	if (pcap_findalldevs_ex(PCAP_SRC_IF_STRING, NULL, &nic_list, error_buffer) == -1) {
-		Logger::Error("Failed to retrieve network card list!");
+		Logger::Get_Instance()->Error("Failed to retrieve network card list!");
         pcap_freealldevs(nic_list);
     }
 }
@@ -51,14 +51,14 @@ void Netdriver::Free_NIC_List() {
 }
 
 bool Netdriver::NIC_Open(char *nic_name) {
-    Logger::Debug("Attempting to open");
-    Logger::Debug(nic_name);
+    Logger::Get_Instance()->Debug("Attempting to open");
+    Logger::Get_Instance()->Debug(nic_name);
     if ((nic_handle = pcap_open(nic_name, 65536, PCAP_OPENFLAG_PROMISCUOUS, 1000, NULL, error_buffer)) == NULL) {
-        Logger::Error("Unable to open network adapter");
+        Logger::Get_Instance()->Error("Unable to open network adapter");
         return false;
     }
 
-    Logger::Info("Successfully opened network adapter");
+    Logger::Get_Instance()->Get_Instance()->Info("Successfully opened network adapter");
     return true;
 }
 
@@ -121,7 +121,7 @@ void Netdriver::Toggle_Capture(char *nic_name) {
 }
 
 void Netdriver::Packet_Handler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data) {
-    Logger::Debug("PACKET!");
+    Logger::Get_Instance()->Debug("PACKET!");
 }
 
 

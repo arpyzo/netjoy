@@ -14,8 +14,6 @@ Frame::Frame()
 : wxFrame((wxFrame *)NULL, -1, "NetJoy", wxPoint(200,200), wxSize(500,200)) {
     SetIcon(wxIcon("NetJoy.ico"));
 
-    Setup_Netdriver();
-
     Setup_Menu();
 
     wxPanel *panel = new wxPanel(this, wxID_ANY, wxDefaultPosition);
@@ -23,8 +21,6 @@ Frame::Frame()
     wxBoxSizer *panel_hsizer = new wxBoxSizer(wxHORIZONTAL);
     
     nic_choice = new wxChoice(panel, wxID_ANY);
-    nic_choice->Append(wxArrayString(2, (const char **)netdriver->Get_NIC_Names()));
-    nic_choice->SetSelection(0);
 
     wxButton *capture_button = new wxButton(panel, PANEL_CAPTURE, "Start");
     
@@ -33,9 +29,16 @@ Frame::Frame()
     panel->SetSizer(panel_hsizer);
     main_vsizer->Add(panel, 0, wxEXPAND);
     
-    wxTextCtrl *textctrl = new wxTextCtrl(this, wxID_ANY);
-    main_vsizer->Add(textctrl, 1, wxEXPAND);
+    wxTextCtrl *text_ctrl = new wxTextCtrl(this, wxID_ANY);
+    main_vsizer->Add(text_ctrl, 1, wxEXPAND);
     SetSizer(main_vsizer);
+
+    Logger::Get_Instance()->Set_Output(text_ctrl);
+
+    Setup_Netdriver();
+
+    nic_choice->Append(wxArrayString(2, (const char **)netdriver->Get_NIC_Names()));
+    nic_choice->SetSelection(0);
 }
 
 void Frame::Setup_Netdriver() {

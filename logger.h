@@ -2,15 +2,25 @@
 #define NETJOY_LOGGER_H
 
 #include <wx/wx.h>
+#include <wx/textctrl.h>
 
 /************************** Logger **********************************/
 class Logger {
     public:
-        Logger();
-        static void Debug(char *message);
-        static void Info(char *message);
-        static void Error(char *message);
+        static Logger *Get_Instance();
 
+        void Set_Output(wxTextCtrl *output);
+
+        void Debug(char *message);
+        void Info(char *message);
+        void Error(char *message);
+
+    private:
+        Logger();
+        //~Logger();
+        static Logger *logger_instance;
+
+        wxTextCtrl *output;
 };
 
 #endif

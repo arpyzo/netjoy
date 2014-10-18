@@ -4,6 +4,7 @@
 #include <wx/wx.h>
 #include <wx/splitter.h>
 #include "netdriver.h"
+#include "logger.h"
 
 enum {
     MENU_ABOUT,

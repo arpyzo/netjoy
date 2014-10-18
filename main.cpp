@@ -16,6 +16,8 @@ Frame::Frame()
 
     Setup_Menu();
 
+	wxTextCtrl *text_ctrl = Setup_Logger();
+
     wxPanel *panel = new wxPanel(this, wxID_ANY, wxDefaultPosition);
     wxBoxSizer *main_vsizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer *panel_hsizer = new wxBoxSizer(wxHORIZONTAL);
@@ -32,8 +34,6 @@ Frame::Frame()
     wxTextCtrl *text_ctrl = new wxTextCtrl(this, wxID_ANY);
     main_vsizer->Add(text_ctrl, 1, wxEXPAND);
     SetSizer(main_vsizer);
-
-    Logger::Get_Instance()->Set_Output(text_ctrl);
 
     Setup_Netdriver();
 
@@ -57,6 +57,14 @@ void Frame::Setup_Menu() {
     menu_bar->Append(help_menu, "&Help");
 
     SetMenuBar(menu_bar);
+}
+
+wxTextCtrl Frame::Setup_Logger() {
+	wxTextCtrl *text_ctrl = new wxTextCtrl(this, wxID_ANY);
+
+	Logger::Get_Instance()->Set_Output(text_ctrl);
+
+	return text_ctrl;
 }
 
 void Frame::Menu_About(wxCommandEvent &WXUNUSED(event)) {

@@ -18,14 +18,16 @@ class Frame: public wxFrame {
     public:
         Frame();
         ~Frame();
-        void Setup_Netdriver();
-        void Setup_Menu();
 
         void Menu_About(wxCommandEvent &event);
         void Menu_Quit(wxCommandEvent &event);
         void Panel_Capture(wxCommandEvent &event);
 
     private:
+		void Setup_Menu();
+		wxTextCtrl *Setup_Logger();
+		void Setup_Netdrivr();
+
         Netdriver *netdriver;
 
         wxChoice *nic_choice;

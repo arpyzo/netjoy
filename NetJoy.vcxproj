@@ -71,12 +71,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Rob%27s Files\Development\wxWidgets\NetJoy\logger.cpp" />
+    <ClCompile Include="logger.cpp" />
     <ClCompile Include="netdriver.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Rob%27s Files\Development\wxWidgets\NetJoy\logger.h" />
+    <ClInclude Include="logger.h" />
     <ClInclude Include="netdriver.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="main.h" />

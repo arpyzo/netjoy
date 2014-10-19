@@ -26,7 +26,7 @@ class Frame: public wxFrame {
     private:
 		void Setup_Menu();
 		wxTextCtrl *Setup_Logger();
-		void Setup_Netdrivr();
+		void Setup_Netdriver();
 
         Netdriver *netdriver;
 

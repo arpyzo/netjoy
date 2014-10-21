@@ -39,6 +39,10 @@ class Frame: public wxFrame {
 class App: public wxApp {
     public:
         virtual bool OnInit();
+
+    private:
+        void OnIdle(wxIdleEvent& event);
+        int count_idle = 0;
 };
 
 #endif

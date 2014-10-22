@@ -32,6 +32,10 @@ class Frame: public wxFrame {
 
         wxChoice *nic_choice;
 
+                void OnIdle(wxIdleEvent& event);
+        int count_idle = 0;
+
+
     DECLARE_EVENT_TABLE()
 };
 
@@ -41,8 +45,8 @@ class App: public wxApp {
         virtual bool OnInit();
 
     private:
-        void OnIdle(wxIdleEvent& event);
-        int count_idle = 0;
+        //void OnIdle(wxIdleEvent& event);
+        //int count_idle = 0;
 };
 
 #endif

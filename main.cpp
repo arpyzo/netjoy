@@ -37,6 +37,8 @@ Frame::Frame()
     main_vsizer->Add(panel, 0, wxEXPAND);    
     main_vsizer->Add(text_ctrl, 1, wxEXPAND);
     SetSizer(main_vsizer);
+
+    Connect(wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(Frame::OnIdle));
 }
 
 void Frame::Setup_Netdriver() {
@@ -86,12 +88,10 @@ bool App::OnInit() {
     Frame *main_frame = new Frame();
     main_frame->Show(TRUE);
 
-    Connect(wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(App::OnIdle));
-
     return TRUE;
 }
 
-void App::OnIdle(wxIdleEvent& event) {
+void Frame::OnIdle(wxIdleEvent& event) {
     if (count_idle < 3) {
         Logger::Get_Instance()->Debug("IDLE EVENT!\n");
         count_idle++;

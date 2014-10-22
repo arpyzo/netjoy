@@ -3,14 +3,15 @@
 
 #include <wx/wx.h>
 #include <wx/splitter.h>
+#include <wx/timer.h>   
 #include "netdriver.h"
 #include "logger.h"
 
 enum {
     MENU_ABOUT,
     MENU_QUIT,
-
-    PANEL_CAPTURE
+    PANEL_CAPTURE,
+    TIMER
 };
 
 /************************** Frame **********************************/
@@ -22,6 +23,7 @@ class Frame: public wxFrame {
         void Menu_About(wxCommandEvent &event);
         void Menu_Quit(wxCommandEvent &event);
         void Panel_Capture(wxCommandEvent &event);
+        void Timer_Capture(wxTimerEvent &event);
 
     private:
 		void Setup_Menu();
@@ -32,9 +34,7 @@ class Frame: public wxFrame {
 
         wxChoice *nic_choice;
 
-                void OnIdle(wxIdleEvent& event);
-        int count_idle = 0;
-
+        wxTimer *capture_timer;
 
     DECLARE_EVENT_TABLE()
 };
@@ -43,10 +43,6 @@ class Frame: public wxFrame {
 class App: public wxApp {
     public:
         virtual bool OnInit();
-
-    private:
-        //void OnIdle(wxIdleEvent& event);
-        //int count_idle = 0;
 };
 
 #endif

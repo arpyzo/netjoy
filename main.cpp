@@ -8,6 +8,7 @@ BEGIN_EVENT_TABLE(Frame,wxFrame)
     EVT_MENU    (MENU_ABOUT, Frame::Menu_About)
     EVT_MENU    (MENU_QUIT,  Frame::Menu_Quit)
     EVT_BUTTON  (PANEL_CAPTURE, Frame::Panel_Capture)
+    EVT_TIMER   (TIMER, Frame::Timer_Capture)
 END_EVENT_TABLE()
 
 Frame::Frame() 
@@ -38,7 +39,7 @@ Frame::Frame()
     main_vsizer->Add(text_ctrl, 1, wxEXPAND);
     SetSizer(main_vsizer);
 
-    Connect(wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(Frame::OnIdle));
+    capture_timer = new wxTimer(this, TIMER);
 }
 
 void Frame::Setup_Netdriver() {
@@ -76,10 +77,18 @@ void Frame::Menu_Quit(wxCommandEvent &WXUNUSED(event)) {
 }
 
 void Frame::Panel_Capture(wxCommandEvent &WXUNUSED(event)) {
-    netdriver->Toggle_Capture(nic_choice->GetString(nic_choice->GetCurrentSelection()).char_str());
+    //netdriver->Toggle_Capture(nic_choice->GetString(nic_choice->GetCurrentSelection()).char_str());
+    // TODO: check for timer success
+    capture_timer->Start(10, true);
+    Logger::Get_Instance()->Debug("Timer started.\n");
+}
+
+void Frame::Timer_Capture(wxTimerEvent &WXUNUSED(event)) {
+    Logger::Get_Instance()->Debug("Timer fired!\n");
 }
 
 Frame::~Frame() {
+    delete capture_timer;
     delete netdriver;
 }
 
@@ -89,14 +98,5 @@ bool App::OnInit() {
     main_frame->Show(TRUE);
 
     return TRUE;
-}
-
-void Frame::OnIdle(wxIdleEvent& event) {
-    if (count_idle < 3) {
-        Logger::Get_Instance()->Debug("IDLE EVENT!\n");
-        count_idle++;
-    }
-
-    event.RequestMore();
 }
 

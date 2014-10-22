@@ -90,6 +90,7 @@ void Frame::Timer_Capture(wxTimerEvent &WXUNUSED(event)) {
 Frame::~Frame() {
     delete capture_timer;
     delete netdriver;
+    Logger::Release();
 }
 
 /*************************** App_Class ****************************/

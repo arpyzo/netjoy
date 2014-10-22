@@ -8,6 +8,7 @@
 class Logger {
     public:
         static Logger *Get_Instance();
+        static void Release();
 
         void Set_Output(wxTextCtrl *output);
 

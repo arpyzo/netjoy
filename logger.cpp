@@ -14,6 +14,12 @@ Logger *Logger::Get_Instance() {
     return logger_instance;
 }
 
+void Logger::Release() {
+    if (logger_instance) {
+        delete logger_instance;
+    }
+}
+
 void Logger::Set_Output(wxTextCtrl *output) {
     this->output = output;
 }

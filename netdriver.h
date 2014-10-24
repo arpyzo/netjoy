@@ -40,6 +40,7 @@ class Netdriver {
         ~Netdriver();
 
         char **Get_NIC_Names();
+        void Get_Packets();
 
         void Toggle_Capture(char *nic_name);
         static void Packet_Handler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data);
@@ -54,8 +55,6 @@ class Netdriver {
         pcap_t *nic_handle;
 
         char error_buffer[PCAP_ERRBUF_SIZE];
-
-        //Logger *logger;
 };
 
 #endif

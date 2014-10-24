@@ -26,15 +26,15 @@ void Logger::Set_Output(wxTextCtrl *output) {
 
 void Logger::Debug(char *message) {
     //wxMessageBox(message);
-    output->AppendText(wxString::Format("%s", message));
+    output->AppendText(wxString::Format("%s\n", message));
 }
 
 void Logger::Info(char *message) {
     //wxMessageBox(message);
-    output->AppendText(wxString::Format("%s", message));
+    output->AppendText(wxString::Format("%s\n", message));
 }
 
 void Logger::Error(char *message) {
     //wxMessageBox(message);
-    output->AppendText(wxString::Format("%s", message));
+    output->AppendText(wxString::Format("%s\n", message));
 }

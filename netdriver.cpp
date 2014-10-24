@@ -58,6 +58,8 @@ bool Netdriver::NIC_Open(char *nic_name) {
         return false;
     }
 
+    pcap_setnonblock(nic_handle, 1, error_buffer);
+
     Logger::Get_Instance()->Get_Instance()->Info("Successfully opened network adapter");
     return true;
 }
@@ -114,10 +116,17 @@ bool Netdriver::NIC_Open(char *nic_name) {
 
 
 void Netdriver::Toggle_Capture(char *nic_name) {
-    //logger->Info("Toggling capture");
+    Logger::Get_Instance()->Info("Toggling capture");
     //logger->Info(nic_name);
     NIC_Open(nic_name);
-    pcap_loop(nic_handle, 0, Packet_Handler, NULL);
+    //pcap_loop(nic_handle, 0, Packet_Handler, NULL);
+    //Get_Packets();
+}
+
+void Netdriver::Get_Packets() {
+    Logger::Get_Instance()->Debug("Getting packets");
+    pcap_dispatch(nic_handle, -1, Packet_Handler, NULL);
+    Logger::Get_Instance()->Debug("Got packets");
 }
 
 void Netdriver::Packet_Handler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data) {

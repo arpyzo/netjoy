@@ -61,7 +61,7 @@ void Frame::Setup_Menu() {
 }
 
 wxTextCtrl *Frame::Setup_Logger() {
-	wxTextCtrl *text_ctrl = new wxTextCtrl(this, wxID_ANY);
+	wxTextCtrl *text_ctrl = new wxTextCtrl(this,wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
 
 	Logger::Get_Instance()->Set_Output(text_ctrl);
 
@@ -77,14 +77,16 @@ void Frame::Menu_Quit(wxCommandEvent &WXUNUSED(event)) {
 }
 
 void Frame::Panel_Capture(wxCommandEvent &WXUNUSED(event)) {
-    //netdriver->Toggle_Capture(nic_choice->GetString(nic_choice->GetCurrentSelection()).char_str());
+    netdriver->Toggle_Capture(nic_choice->GetString(nic_choice->GetCurrentSelection()).char_str());
     // TODO: check for timer success
-    capture_timer->Start(10, true);
+    capture_timer->Start(100, true);
     Logger::Get_Instance()->Debug("Timer started.\n");
 }
 
 void Frame::Timer_Capture(wxTimerEvent &WXUNUSED(event)) {
     Logger::Get_Instance()->Debug("Timer fired!\n");
+    netdriver->Get_Packets();
+    capture_timer->Start(100, true);
 }
 
 Frame::~Frame() {

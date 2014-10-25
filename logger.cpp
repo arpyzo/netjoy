@@ -7,7 +7,7 @@ Logger *Logger::logger_instance = NULL;
 Logger::Logger() {
 }
 
-Logger *Logger::Get_Instance() {
+Logger *Logger::GetInstance() {
     if (!logger_instance) {
         logger_instance = new Logger();
     }
@@ -20,21 +20,18 @@ void Logger::Release() {
     }
 }
 
-void Logger::Set_Output(wxTextCtrl *output) {
+void Logger::SetOutput(wxTextCtrl *output) {
     this->output = output;
 }
 
 void Logger::Debug(char *message) {
-    //wxMessageBox(message);
     output->AppendText(wxString::Format("%s\n", message));
 }
 
 void Logger::Info(char *message) {
-    //wxMessageBox(message);
     output->AppendText(wxString::Format("%s\n", message));
 }
 
 void Logger::Error(char *message) {
-    //wxMessageBox(message);
     output->AppendText(wxString::Format("%s\n", message));
 }

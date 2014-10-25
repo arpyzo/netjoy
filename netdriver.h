@@ -7,7 +7,6 @@
 #include <pcap.h>
 #include <iphlpapi.h>
 #include <winerror.h>
-//#include <wx/wx.h>
 #include "logger.h"
 
 /* 4 bytes IP address */
@@ -34,21 +33,21 @@ typedef struct ip_header{
 }ip_header;
 
 /************************** Netdriver **********************************/
-class Netdriver {
+class NetDriver {
     public:
-        Netdriver();
-        ~Netdriver();
+        NetDriver();
+        ~NetDriver();
 
-        char **Get_NIC_Names();
-        void Get_Packets();
+        char **GetNicNames();
+        void GetPackets();
 
-        void Toggle_Capture(char *nic_name);
-        static void Packet_Handler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data);
+        void ToggleCapture(char *nic_name);
+        static void PacketHandler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data);
 
     private:
-        void Get_NIC_List();
-        void Free_NIC_List();
-        bool NIC_Open(char *nic_name);
+        void GetNicList();
+        void FreeNicList();
+        bool NicOpen(char *nic_name);
 
         pcap_if_t *nic_list;
         char** nic_names;

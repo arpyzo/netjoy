@@ -7,10 +7,10 @@
 /************************** Logger **********************************/
 class Logger {
     public:
-        static Logger *Get_Instance();
+        static Logger *GetInstance();
         static void Release();
 
-        void Set_Output(wxTextCtrl *output);
+        void SetOutput(wxTextCtrl *output);
 
         void Debug(char *message);
         void Info(char *message);
@@ -18,7 +18,7 @@ class Logger {
 
     private:
         Logger();
-        //~Logger();
+
         static Logger *logger_instance;
 
         wxTextCtrl *output;

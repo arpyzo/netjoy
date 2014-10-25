@@ -5,10 +5,10 @@ IMPLEMENT_APP(App)
 
 /***************************** Frame ******************************/
 BEGIN_EVENT_TABLE(Frame,wxFrame)
-    EVT_MENU    (MENU_ABOUT, Frame::Menu_About)
-    EVT_MENU    (MENU_QUIT,  Frame::Menu_Quit)
-    EVT_BUTTON  (PANEL_CAPTURE, Frame::Panel_Capture)
-    EVT_TIMER   (TIMER, Frame::Timer_Capture)
+    EVT_MENU    (MENU_ABOUT, Frame::OnMenuAbout)
+    EVT_MENU    (MENU_QUIT,  Frame::OnMenuQuit)
+    EVT_BUTTON  (PANEL_CAPTURE, Frame::OnPanelCapture)
+    EVT_TIMER   (TIMER, Frame::OnTimerCapture)
 END_EVENT_TABLE()
 
 Frame::Frame() 
@@ -17,16 +17,16 @@ Frame::Frame()
 
 	wxTextCtrl *text_ctrl = Setup_Logger();
 
-	Setup_Netdriver();
+	SetupNetDriver();
 
-    Setup_Menu();
+    SetupMenu();
 
     wxPanel *panel = new wxPanel(this, wxID_ANY, wxDefaultPosition);
     wxBoxSizer *main_vsizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer *panel_hsizer = new wxBoxSizer(wxHORIZONTAL);
     
     nic_choice = new wxChoice(panel, wxID_ANY);
-	nic_choice->Append(wxArrayString(2, (const char **)netdriver->Get_NIC_Names()));
+	nic_choice->Append(wxArrayString(2, (const char **)netdriver->GetNicNames()));
 	nic_choice->SetSelection(0);
 
     wxButton *capture_button = new wxButton(panel, PANEL_CAPTURE, "Start");
@@ -42,11 +42,11 @@ Frame::Frame()
     capture_timer = new wxTimer(this, TIMER);
 }
 
-void Frame::Setup_Netdriver() {
-    netdriver = new Netdriver();
+void Frame::SetupNetDriver() {
+    netdriver = new NetDriver();
 }
 
-void Frame::Setup_Menu() {
+void Frame::SetupMenu() {
     wxMenuBar *menu_bar = new wxMenuBar();
     wxMenu *file_menu = new wxMenu();
     wxMenu *help_menu = new wxMenu();
@@ -63,29 +63,29 @@ void Frame::Setup_Menu() {
 wxTextCtrl *Frame::Setup_Logger() {
 	wxTextCtrl *text_ctrl = new wxTextCtrl(this,wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
 
-	Logger::Get_Instance()->Set_Output(text_ctrl);
+	Logger::GetInstance()->SetOutput(text_ctrl);
 
 	return text_ctrl;
 }
 
-void Frame::Menu_About(wxCommandEvent &WXUNUSED(event)) {
+void Frame::OnMenuAbout(wxCommandEvent &WXUNUSED(event)) {
     wxMessageBox("wxWidgets Template\nRobert Pyzalski 2014", "About..", wxICON_INFORMATION);
 }
 
-void Frame::Menu_Quit(wxCommandEvent &WXUNUSED(event)) {
+void Frame::OnMenuQuit(wxCommandEvent &WXUNUSED(event)) {
     Close(TRUE);
 }
 
-void Frame::Panel_Capture(wxCommandEvent &WXUNUSED(event)) {
-    netdriver->Toggle_Capture(nic_choice->GetString(nic_choice->GetCurrentSelection()).char_str());
+void Frame::OnPanelCapture(wxCommandEvent &WXUNUSED(event)) {
+    netdriver->ToggleCapture(nic_choice->GetString(nic_choice->GetCurrentSelection()).char_str());
     // TODO: check for timer success
     capture_timer->Start(100, true);
-    Logger::Get_Instance()->Debug("Timer started.\n");
+    Logger::GetInstance()->Debug("Timer started.\n");
 }
 
-void Frame::Timer_Capture(wxTimerEvent &WXUNUSED(event)) {
-    Logger::Get_Instance()->Debug("Timer fired!\n");
-    netdriver->Get_Packets();
+void Frame::OnTimerCapture(wxTimerEvent &WXUNUSED(event)) {
+    Logger::GetInstance()->Debug("Timer fired!\n");
+    netdriver->GetPackets();
     capture_timer->Start(100, true);
 }
 

@@ -35,3 +35,7 @@ void Logger::Info(char *message) {
 void Logger::Error(char *message) {
     output->AppendText(wxString::Format("%s\n", message));
 }
+
+void Logger::Test(string message) {
+    output->AppendText(message);
+}

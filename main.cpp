@@ -78,8 +78,8 @@ void Frame::OnMenuQuit(wxCommandEvent &WXUNUSED(event)) {
 
 void Frame::OnPanelCapture(wxCommandEvent &WXUNUSED(event)) {
     netdriver->ToggleCapture(nic_choice->GetString(nic_choice->GetCurrentSelection()).char_str());
-    // TODO: check for timer success
-    capture_timer->Start(100, true);
+    // TODO: check for success acquiring timer
+    capture_timer->Start(1, true);
     Logger::GetInstance()->Debug("Timer started.\n");
 }
 

@@ -7,6 +7,7 @@
 #include <pcap.h>
 #include <iphlpapi.h>
 #include <winerror.h>
+#include <wx/wx.h>
 #include "logger.h"
 
 /* 4 bytes IP address */

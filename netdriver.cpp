@@ -130,7 +130,11 @@ void NetDriver::GetPackets() {
 }
 
 void NetDriver::PacketHandler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data) {
-    Logger::GetInstance()->Debug("PACKET!");
+    u_char *ethertype1 = (u_char *) (pkt_data + 12);
+    u_char *ethertype2 = (u_char *) (pkt_data + 13);
+    //wxMessageBox(wxString::Format("%d - %d", *ethertype1, *ethertype2));
+//    Logger::GetInstance()->Debug("PACKET!");
+    Logger::GetInstance()->Test("We haz packet!!!");
 }
 
 

@@ -3,6 +3,9 @@
 
 #include <wx/wx.h>
 #include <wx/textctrl.h>
+#include <string>
+
+using namespace std;
 
 /************************** Logger **********************************/
 class Logger {
@@ -15,6 +18,7 @@ class Logger {
         void Debug(char *message);
         void Info(char *message);
         void Error(char *message);
+        void Test(string message);
 
     private:
         Logger();

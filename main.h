@@ -27,13 +27,13 @@ class Frame: public wxFrame {
 
     private:
 		void SetupMenu();
-		wxTextCtrl *Setup_Logger();
-		void SetupNetDriver();
+		void SetupLogger(wxTextCtrl *logger_text_ctrl);
+		void SetupNetInterface();
 
-        NetDriver *netdriver;
+        NetDriver *net_driver;
 
         wxChoice *nic_choice;
-
+        wxButton *capture_button;
         wxTimer *capture_timer;
 
     DECLARE_EVENT_TABLE()

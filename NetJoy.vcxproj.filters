@@ -21,7 +21,7 @@
     <ClCompile Include="netdriver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Rob%27s Files\Development\wxWidgets\NetJoy\logger.cpp">
+    <ClCompile Include="logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,10 +32,10 @@
     <ClInclude Include="debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="netdriver.h">
+    <ClInclude Include="logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Rob%27s Files\Development\wxWidgets\NetJoy\logger.h">
+    <ClInclude Include="netdriver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

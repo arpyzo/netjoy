@@ -15,35 +15,42 @@ Frame::Frame()
 : wxFrame((wxFrame *)NULL, -1, "NetJoy", wxPoint(200,200), wxSize(500,200)) {
     SetIcon(wxIcon("NetJoy.ico"));
 
-	wxTextCtrl *text_ctrl = Setup_Logger();
-
-	SetupNetDriver();
-
     SetupMenu();
 
-    wxPanel *panel = new wxPanel(this, wxID_ANY, wxDefaultPosition);
+        // Create main vertical sizer
     wxBoxSizer *main_vsizer = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer *panel_hsizer = new wxBoxSizer(wxHORIZONTAL);
-    
-    nic_choice = new wxChoice(panel, wxID_ANY);
-	nic_choice->Append(wxArrayString(2, (const char **)netdriver->GetNicNames()));
-	nic_choice->SetSelection(0);
-
-    wxButton *capture_button = new wxButton(panel, PANEL_CAPTURE, "Start");
-    
-    panel_hsizer->Add(nic_choice, 0, wxALL, 10);
-    panel_hsizer->Add(capture_button, 0, wxALL, 10);
-    panel->SetSizer(panel_hsizer);
-
-    main_vsizer->Add(panel, 0, wxEXPAND);    
-    main_vsizer->Add(text_ctrl, 1, wxEXPAND);
     SetSizer(main_vsizer);
 
+        // Add a panel to main sizer
+    wxPanel *panel = new wxPanel(this, wxID_ANY, wxDefaultPosition);
+    main_vsizer->Add(panel, 0, wxEXPAND);
+
+        // Add horizontal controls to panel
+    wxBoxSizer *panel_hsizer = new wxBoxSizer(wxHORIZONTAL);
+    panel->SetSizer(panel_hsizer);
+
+    nic_choice = new wxChoice(panel, wxID_ANY);
+    panel_hsizer->Add(nic_choice, 0, wxALL, 10);
+
+    capture_button = new wxButton(panel, PANEL_CAPTURE, "Start");
+    panel_hsizer->Add(capture_button, 0, wxALL, 10);
+    
+        // Add log message area to main sizer
+    wxTextCtrl *logger_text_ctrl = new wxTextCtrl(this,wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
+    main_vsizer->Add(logger_text_ctrl, 1, wxEXPAND);
+
     capture_timer = new wxTimer(this, TIMER);
+
+    SetupLogger(logger_text_ctrl);
+
+    SetupNetInterface();
 }
 
-void Frame::SetupNetDriver() {
-    netdriver = new NetDriver();
+void Frame::SetupNetInterface() {
+    net_driver = new NetDriver();
+
+    nic_choice->Append(wxArrayString(2, (const char **)net_driver->GetNicNames()));
+    nic_choice->SetSelection(0);
 }
 
 void Frame::SetupMenu() {
@@ -60,16 +67,12 @@ void Frame::SetupMenu() {
     SetMenuBar(menu_bar);
 }
 
-wxTextCtrl *Frame::Setup_Logger() {
-	wxTextCtrl *text_ctrl = new wxTextCtrl(this,wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
-
-	Logger::GetInstance()->SetOutput(text_ctrl);
-
-	return text_ctrl;
+void Frame::SetupLogger(wxTextCtrl *logger_text_ctrl) {
+	Logger::GetInstance()->SetOutput(logger_text_ctrl);
 }
 
 void Frame::OnMenuAbout(wxCommandEvent &WXUNUSED(event)) {
-    wxMessageBox("wxWidgets Template\nRobert Pyzalski 2014", "About..", wxICON_INFORMATION);
+    wxMessageBox("NetJoy\nRobert Pyzalski 2014", "About..", wxICON_INFORMATION);
 }
 
 void Frame::OnMenuQuit(wxCommandEvent &WXUNUSED(event)) {
@@ -77,7 +80,7 @@ void Frame::OnMenuQuit(wxCommandEvent &WXUNUSED(event)) {
 }
 
 void Frame::OnPanelCapture(wxCommandEvent &WXUNUSED(event)) {
-    netdriver->ToggleCapture(nic_choice->GetString(nic_choice->GetCurrentSelection()).char_str());
+    net_driver->ToggleCapture(nic_choice->GetString(nic_choice->GetCurrentSelection()).char_str());
     // TODO: check for success acquiring timer
     capture_timer->Start(1, true);
     Logger::GetInstance()->Debug("Timer started.\n");
@@ -85,17 +88,17 @@ void Frame::OnPanelCapture(wxCommandEvent &WXUNUSED(event)) {
 
 void Frame::OnTimerCapture(wxTimerEvent &WXUNUSED(event)) {
     //Logger::GetInstance()->Debug("Timer fired!\n");
-    netdriver->GetPackets();
+    net_driver->GetPackets();
     capture_timer->Start(100, true);
 }
 
 Frame::~Frame() {
     delete capture_timer;
-    delete netdriver;
+    delete net_driver;
     Logger::Release();
 }
 
-/*************************** App_Class ****************************/
+/*************************** App ****************************/
 bool App::OnInit() {
     Frame *main_frame = new Frame();
     main_frame->Show(TRUE);

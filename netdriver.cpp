@@ -62,57 +62,6 @@ bool NetDriver::NicOpen(char *nic_name) {
     return true;
 }
 
-/*	pcap_t *fp;
-    const u_char *pkt_data;
-    struct pcap_pkthdr *header;
-    int res;
-
-	if ((fp = pcap_open(nics->next->name, 100, PCAP_OPENFLAG_PROMISCUOUS, 20, NULL, error_buffer)) == NULL) {
-		wxMessageBox(wxString::Format("Error opening source: %s", error_buffer));
-	} else {
-		// Read the packets
-        int num_packets = 0;
-		while ((res = pcap_next_ex(fp, &header, &pkt_data)) >= 0 && num_packets < 10) {
-
-			if (res == 0)
-				// Timeout elapsed
-				continue;
-            num_packets++;
-			// print pkt timestamp and pkt len
-			wxMessageBox(wxString::Format("%ld:%ld (%ld)\n", header->ts.tv_sec, header->ts.tv_usec, header->len));
-
-                ip_header *ih = (ip_header *) (pkt_data + 14);
-
-			// Print the packet
-			/*for (int i = 1; (i < header->caplen + 1); i++) {
-				printf("%.2x ", pkt_data[i - 1]);
-				if ((i % 16) == 0) printf("\n");
-			}*/
-
-                  /* print ip addresses and udp ports */
-    //printf("%d.%d.%d.%d.%d -> %d.%d.%d.%d.%d\n",
-    /*wxMessageBox(wxString::Format("%d.%d.%d.%d -> %d.%d.%d.%d\n",
-        ih->saddr.byte1,
-        ih->saddr.byte2,
-        ih->saddr.byte3,
-        ih->saddr.byte4,
-        //sport,
-        ih->daddr.byte1,
-        ih->daddr.byte2,
-        ih->daddr.byte3,
-        ih->daddr.byte4
-        //dport
-        ));
-
-			printf("\n\n");
-		}
-
-		if (res == -1) {
-			wxMessageBox(wxString::Format("Error reading the packets: %s\n", pcap_geterr(fp)));
-		}
-	}*/
-
-
 void NetDriver::ToggleCapture(char *nic_name) {
     Logger::GetInstance()->Info("Toggling capture");
     //logger->Info(nic_name);
@@ -128,18 +77,13 @@ void NetDriver::GetPackets() {
 }
 
 void NetDriver::PacketHandler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data) {
-    u_short *ethertype = (u_short *) (pkt_data + 12);
-    u_char *ethertype1 = (u_char *) (pkt_data + 12);
-    u_char *ethertype2 = (u_char *) (pkt_data + 13);
-    //wxMessageBox(wxString::Format("%d - %d", *ethertype1, *ethertype2));
-//    Logger::GetInstance()->Debug("PACKET!");
-    //Logger::GetInstance()->Test("We haz packet!!!" + to_string(134));
+    u_char *ethertype_high = (u_char *) (pkt_data + 12);
+    u_char *ethertype_low = (u_char *) (pkt_data + 13);
 
-    stringstream hexstream1, hexstream2;
-    hexstream1 << hex << int(*ethertype1) << " " << hex << int(*ethertype2);
-    Logger::GetInstance()->Test("Ethertype u_chars: " + hexstream1.str());
-    hexstream2 << hex << int(*ethertype);
-    Logger::GetInstance()->Test("Ethertype u_short: " + hexstream2.str());
+    stringstream hexstream;
+    hexstream << setw(2) << setfill('0') << hex << int(*ethertype_high);
+    hexstream << setw(2) << setfill('0') << hex << int(*ethertype_low);
+    Logger::GetInstance()->Test("Ethertype or 802.3 length: 0x" + hexstream.str() + "\n");
 }
 
 

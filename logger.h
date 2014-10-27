@@ -4,7 +4,6 @@
 #include <wx/wx.h>
 #include <wx/textctrl.h>
 #include <string>
-
 using namespace std;
 
 /************************** Logger **********************************/

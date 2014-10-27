@@ -3,13 +3,11 @@
 
 /***************************** NetDriver ******************************/
 NetDriver::NetDriver() {
-    //logger = new Logger();
     GetNicList();
 }
 
 NetDriver::~NetDriver() {
     FreeNicList();
-    //delete logger;
 }
 
 char **NetDriver::GetNicNames() {
@@ -124,17 +122,24 @@ void NetDriver::ToggleCapture(char *nic_name) {
 }
 
 void NetDriver::GetPackets() {
-    Logger::GetInstance()->Debug("Getting packets");
+    //Logger::GetInstance()->Debug("Getting packets");
     pcap_dispatch(nic_handle, -1, PacketHandler, NULL);
-    Logger::GetInstance()->Debug("Got packets");
+    //Logger::GetInstance()->Debug("Got packets");
 }
 
 void NetDriver::PacketHandler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data) {
+    u_short *ethertype = (u_short *) (pkt_data + 12);
     u_char *ethertype1 = (u_char *) (pkt_data + 12);
     u_char *ethertype2 = (u_char *) (pkt_data + 13);
     //wxMessageBox(wxString::Format("%d - %d", *ethertype1, *ethertype2));
 //    Logger::GetInstance()->Debug("PACKET!");
-    Logger::GetInstance()->Test("We haz packet!!!");
+    //Logger::GetInstance()->Test("We haz packet!!!" + to_string(134));
+
+    stringstream hexstream1, hexstream2;
+    hexstream1 << hex << int(*ethertype1) << " " << hex << int(*ethertype2);
+    Logger::GetInstance()->Test("Ethertype u_chars: " + hexstream1.str());
+    hexstream2 << hex << int(*ethertype);
+    Logger::GetInstance()->Test("Ethertype u_short: " + hexstream2.str());
 }
 
 

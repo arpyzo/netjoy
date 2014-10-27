@@ -84,7 +84,7 @@ void Frame::OnPanelCapture(wxCommandEvent &WXUNUSED(event)) {
 }
 
 void Frame::OnTimerCapture(wxTimerEvent &WXUNUSED(event)) {
-    Logger::GetInstance()->Debug("Timer fired!\n");
+    //Logger::GetInstance()->Debug("Timer fired!\n");
     netdriver->GetPackets();
     capture_timer->Start(100, true);
 }

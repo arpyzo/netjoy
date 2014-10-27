@@ -37,5 +37,5 @@ void Logger::Error(char *message) {
 }
 
 void Logger::Test(string message) {
-    output->AppendText(message);
+    output->AppendText(message + "\n");  
 }

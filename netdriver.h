@@ -7,7 +7,11 @@
 #include <pcap.h>
 #include <iphlpapi.h>
 #include <winerror.h>
-#include <wx/wx.h>
+//#include <wx/wx.h>
+#include <string>
+#include <sstream>
+using namespace std;
+
 #include "logger.h"
 
 /* 4 bytes IP address */

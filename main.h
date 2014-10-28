@@ -5,6 +5,7 @@
 #include <wx/splitter.h>
 #include <wx/timer.h>   
 #include "netdriver.h"
+#include "postgres.h"
 #include "logger.h"
 
 enum {
@@ -29,8 +30,10 @@ class Frame: public wxFrame {
 		void SetupMenu();
 		void SetupLogger(wxTextCtrl *logger_text_ctrl);
 		void SetupNetInterface();
+        void SetupPostgres();
 
         NetDriver *net_driver;
+        Postgres *postgres;
 
         wxChoice *nic_choice;
         wxButton *capture_button;

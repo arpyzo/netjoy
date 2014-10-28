@@ -44,6 +44,8 @@ Frame::Frame()
     SetupLogger(logger_text_ctrl);
 
     SetupNetInterface();
+
+    SetupPostgres();
 }
 
 void Frame::SetupNetInterface() {
@@ -51,6 +53,10 @@ void Frame::SetupNetInterface() {
 
     nic_choice->Append(wxArrayString(2, (const char **)net_driver->GetNicNames()));
     nic_choice->SetSelection(0);
+}
+
+void Frame::SetupPostgres() {
+    postgres = new Postgres();
 }
 
 void Frame::SetupMenu() {
@@ -96,6 +102,7 @@ void Frame::OnTimerCapture(wxTimerEvent &WXUNUSED(event)) {
 Frame::~Frame() {
     delete capture_timer;
     delete net_driver;
+    delete postgres;
     Logger::Release();
 }
 

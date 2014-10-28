@@ -47,7 +47,8 @@ class NetDriver {
         char **GetNicNames();
         void GetPackets();
 
-        void ToggleCapture(char *nic_name);
+        //void ToggleCapture(char *nic_name);
+        void ToggleCapture(int nic_number);
         static void PacketHandler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data);
 
     private:

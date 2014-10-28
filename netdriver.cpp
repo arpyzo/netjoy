@@ -20,8 +20,8 @@ char **NetDriver::GetNicNames() {
 
 	for (pcap_if_t *nic = nic_list; nic; nic = nic->next) {
 		if (nic->description) {
-            //*nic_names_pointer = nic->description;
-            *nic_names_pointer = nic->name;
+            *nic_names_pointer = nic->description;
+            //*nic_names_pointer = nic->name;
 			Logger::GetInstance()->Debug(nic->description);
 		}
 		else {
@@ -62,10 +62,18 @@ bool NetDriver::NicOpen(char *nic_name) {
     return true;
 }
 
-void NetDriver::ToggleCapture(char *nic_name) {
+//void NetDriver::ToggleCapture(char *nic_name) {
+void NetDriver::ToggleCapture(int nic_number) {
     Logger::GetInstance()->Info("Toggling capture");
     //logger->Info(nic_name);
-    NicOpen(nic_name);
+
+    pcap_if_t *nic = nic_list;
+    for (int i = 0; i < nic_number; i++) {
+        nic = nic->next;
+    }
+
+    NicOpen(nic->name);
+
     //pcap_loop(nic_handle, 0, Packet_Handler, NULL);
     //Get_Packets();
 }
@@ -83,7 +91,10 @@ void NetDriver::PacketHandler(u_char *param, const struct pcap_pkthdr *header, c
     stringstream hexstream;
     hexstream << setw(2) << setfill('0') << hex << int(*ethertype_high);
     hexstream << setw(2) << setfill('0') << hex << int(*ethertype_low);
-    Logger::GetInstance()->Test("Ethertype or 802.3 length: 0x" + hexstream.str() + "\n");
+    Logger::GetInstance()->Test("Ethertype or 802.3 length: 0x" + hexstream.str());
+    Logger::GetInstance()->Test("Packet length: " + to_string(header->len));
+
+    // packet length doesn't count 8 byte preamble, 4 byte CRC, 12 byte interpacket gap
 }
 
 

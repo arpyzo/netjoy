@@ -12,7 +12,7 @@ BEGIN_EVENT_TABLE(Frame,wxFrame)
 END_EVENT_TABLE()
 
 Frame::Frame() 
-: wxFrame((wxFrame *)NULL, -1, "NetJoy", wxPoint(200,200), wxSize(500,200)) {
+: wxFrame((wxFrame *)NULL, -1, "NetJoy", wxPoint(200,200), wxSize(500,800)) {
     SetIcon(wxIcon("NetJoy.ico"));
 
     SetupMenu();
@@ -80,7 +80,8 @@ void Frame::OnMenuQuit(wxCommandEvent &WXUNUSED(event)) {
 }
 
 void Frame::OnPanelCapture(wxCommandEvent &WXUNUSED(event)) {
-    net_driver->ToggleCapture(nic_choice->GetString(nic_choice->GetCurrentSelection()).char_str());
+    //net_driver->ToggleCapture(nic_choice->GetString(nic_choice->GetCurrentSelection()).char_str());
+    net_driver->ToggleCapture(nic_choice->GetSelection());
     // TODO: check for success acquiring timer
     capture_timer->Start(1, true);
     Logger::GetInstance()->Debug("Timer started.\n");

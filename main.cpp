@@ -51,7 +51,12 @@ Frame::Frame()
 void Frame::SetupNetInterface() {
     net_driver = new NetDriver();
 
-    nic_choice->Append(wxArrayString(2, (const char **)net_driver->GetNicNames()));
+    //net_driver->GetNicNames(nic_names);
+    //nic_choice->Append(wxArrayString(2, (const char **)net_driver->GetNicNames()));
+    vector<string> nic_names = net_driver->GetNicNames();
+    for (vector<string>::iterator it = nic_names.begin(); it != nic_names.end(); ++it) {
+        nic_choice->Append(*it);
+    }
     nic_choice->SetSelection(0);
 }
 

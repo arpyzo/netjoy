@@ -10,25 +10,28 @@ NetDriver::~NetDriver() {
     FreeNicList();
 }
 
-char **NetDriver::GetNicNames() {
+//char **NetDriver::GetNicNames() {
+vector<string> NetDriver::GetNicNames() {
+    vector<string> nic_names;
+
     if (!nic_list) {
-        return NULL;
+        return nic_names;
     }
 
-    nic_names = new char*[10];
-    char **nic_names_pointer = nic_names;
+    //nic_names = new char*[10];
+    //char **nic_names_pointer = nic_names;
 
 	for (pcap_if_t *nic = nic_list; nic; nic = nic->next) {
 		if (nic->description) {
-            *nic_names_pointer = nic->description;
+            nic_names.push_back(nic->description);
+            //*nic_names_pointer = nic->description;
             //*nic_names_pointer = nic->name;
 			Logger::GetInstance()->Debug(nic->description);
-		}
-		else {
+		} /*else {
             *nic_names_pointer = nic->name;
 			Logger::GetInstance()->Debug("No NIC description available");
 		}
-        nic_names_pointer++;
+        nic_names_pointer++;*/
 	}
 
     return nic_names;
@@ -45,7 +48,7 @@ void NetDriver::GetNicList() {
 
 void NetDriver::FreeNicList() {
     pcap_freealldevs(nic_list);
-    delete nic_names;
+    //delete nic_names;
 }
 
 bool NetDriver::NicOpen(char *nic_name) {

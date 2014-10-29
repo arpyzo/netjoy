@@ -11,6 +11,7 @@
 #include <iomanip>
 #include <string>
 #include <sstream>
+#include <vector>
 using namespace std;
 
 #include "logger.h"
@@ -44,7 +45,8 @@ class NetDriver {
         NetDriver();
         ~NetDriver();
 
-        char **GetNicNames();
+        //char **GetNicNames();
+        vector<string> GetNicNames();
         void GetPackets();
 
         //void ToggleCapture(char *nic_name);
@@ -57,7 +59,7 @@ class NetDriver {
         bool NicOpen(char *nic_name);
 
         pcap_if_t *nic_list;
-        char** nic_names;
+        //char** nic_names;
         pcap_t *nic_handle;
 
         char error_buffer[PCAP_ERRBUF_SIZE];

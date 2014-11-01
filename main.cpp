@@ -3,7 +3,7 @@
 
 IMPLEMENT_APP(App)
 
-/***************************** Frame ******************************/
+/********************************** Frame ******************************/
 BEGIN_EVENT_TABLE(Frame,wxFrame)
     EVT_MENU    (MENU_ABOUT, Frame::OnMenuAbout)
     EVT_MENU    (MENU_QUIT,  Frame::OnMenuQuit)
@@ -51,10 +51,9 @@ Frame::Frame()
 void Frame::SetupNetInterface() {
     net_driver = new NetDriver();
 
-    //net_driver->GetNicNames(nic_names);
-    //nic_choice->Append(wxArrayString(2, (const char **)net_driver->GetNicNames()));
     vector<string> nic_names = net_driver->GetNicNames();
     for (vector<string>::iterator it = nic_names.begin(); it != nic_names.end(); ++it) {
+        // TODO: Strip out unnecessary test from name
         nic_choice->Append(*it);
     }
     nic_choice->SetSelection(0);
@@ -91,16 +90,17 @@ void Frame::OnMenuQuit(wxCommandEvent &WXUNUSED(event)) {
 }
 
 void Frame::OnPanelCapture(wxCommandEvent &WXUNUSED(event)) {
-    //net_driver->ToggleCapture(nic_choice->GetString(nic_choice->GetCurrentSelection()).char_str());
-    net_driver->ToggleCapture(nic_choice->GetSelection());
+    // TODO: stop timer if running
+    net_driver->OpenNic(nic_choice->GetSelection());
     // TODO: check for success acquiring timer
     capture_timer->Start(1, true);
     Logger::GetInstance()->Debug("Timer started.\n");
 }
 
 void Frame::OnTimerCapture(wxTimerEvent &WXUNUSED(event)) {
-    //Logger::GetInstance()->Debug("Timer fired!\n");
+    Logger::GetInstance()->Debug("Timer fired!\n");
     net_driver->GetPackets();
+    // TODO: keep getting packets until some amount of time has passed
     capture_timer->Start(100, true);
 }
 
@@ -111,7 +111,7 @@ Frame::~Frame() {
     Logger::Release();
 }
 
-/*************************** App ****************************/
+/********************************** App **********************************/
 bool App::OnInit() {
     Frame *main_frame = new Frame();
     main_frame->Show(TRUE);

@@ -15,7 +15,7 @@ enum {
     TIMER
 };
 
-/************************** Frame **********************************/
+/********************************** Frame **********************************/
 class Frame: public wxFrame {
     public:
         Frame();
@@ -42,7 +42,7 @@ class Frame: public wxFrame {
     DECLARE_EVENT_TABLE()
 };
 
-/**************************** App **********************************/
+/********************************** App **********************************/
 class App: public wxApp {
     public:
         virtual bool OnInit();

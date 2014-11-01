@@ -3,7 +3,7 @@
 
 Logger *Logger::logger_instance = NULL;
 
-/***************************** Logger ******************************/
+/********************************** Logger **********************************/
 Logger::Logger() {
 }
 
@@ -23,19 +23,15 @@ void Logger::Release() {
 void Logger::SetOutput(wxTextCtrl *output) {
     this->output = output;
 }
-
-void Logger::Debug(char *message) {
-    output->AppendText(wxString::Format("%s\n", message));
+//TODO: Set different font colors
+void Logger::Debug(string message) {
+    output->AppendText(message + "\n");
 }
 
-void Logger::Info(char *message) {
-    output->AppendText(wxString::Format("%s\n", message));
+void Logger::Info(string message) {
+    output->AppendText(message + "\n");
 }
 
-void Logger::Error(char *message) {
-    output->AppendText(wxString::Format("%s\n", message));
-}
-
-void Logger::Test(string message) {
-    output->AppendText(message + "\n");  
+void Logger::Error(string message) {
+    output->AppendText(message + "\n");
 }

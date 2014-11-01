@@ -6,7 +6,7 @@
 #include <string>
 using namespace std;
 
-/************************** Logger **********************************/
+/********************************** Logger **********************************/
 class Logger {
     public:
         static Logger *GetInstance();
@@ -14,10 +14,9 @@ class Logger {
 
         void SetOutput(wxTextCtrl *output);
 
-        void Debug(char *message);
-        void Info(char *message);
-        void Error(char *message);
-        void Test(string message);
+        void Debug(string message);
+        void Info(string message);
+        void Error(string message);
 
     private:
         Logger();

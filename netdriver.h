@@ -7,7 +7,6 @@
 #include <pcap.h>
 #include <iphlpapi.h>
 #include <winerror.h>
-//#include <wx/wx.h>
 #include <iomanip>
 #include <string>
 #include <sstream>
@@ -22,7 +21,7 @@ typedef struct ip_address{
     u_char byte2;
     u_char byte3;
     u_char byte4;
-}ip_address;
+} ip_address;
 
 /* IPv4 header */
 typedef struct ip_header{
@@ -37,29 +36,25 @@ typedef struct ip_header{
     ip_address  saddr;      // Source address
     ip_address  daddr;      // Destination address
     u_int   op_pad;         // Option + Padding
-}ip_header;
+} ip_header;
 
-/************************** Netdriver **********************************/
+/********************************** Netdriver **********************************/
 class NetDriver {
     public:
         NetDriver();
         ~NetDriver();
 
-        //char **GetNicNames();
         vector<string> GetNicNames();
+        bool OpenNic(int nic_number);
         void GetPackets();
 
-        //void ToggleCapture(char *nic_name);
-        void ToggleCapture(int nic_number);
         static void PacketHandler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data);
 
     private:
         void GetNicList();
         void FreeNicList();
-        bool NicOpen(char *nic_name);
 
         pcap_if_t *nic_list;
-        //char** nic_names;
         pcap_t *nic_handle;
 
         char error_buffer[PCAP_ERRBUF_SIZE];

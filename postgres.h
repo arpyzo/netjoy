@@ -4,7 +4,7 @@
 #include <libpq-fe.h>
 #include "logger.h"
 
-/************************** Postgres **********************************/
+/********************************** Postgres **********************************/
 class Postgres {
     public:
         Postgres();

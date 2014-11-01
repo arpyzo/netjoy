@@ -1,7 +1,7 @@
 #include "debug.h"
 #include "netdriver.h"
 
-/***************************** NetDriver ******************************/
+/********************************** NetDriver **********************************/
 NetDriver::NetDriver() {
     GetNicList();
 }
@@ -51,40 +51,27 @@ void NetDriver::FreeNicList() {
     //delete nic_names;
 }
 
-bool NetDriver::NicOpen(char *nic_name) {
-    Logger::GetInstance()->Debug("Attempting to open");
-    Logger::GetInstance()->Debug(nic_name);
-    if ((nic_handle = pcap_open(nic_name, 65536, PCAP_OPENFLAG_PROMISCUOUS, 1000, NULL, error_buffer)) == NULL) {
+bool NetDriver::OpenNic(int nic_number) {
+    pcap_if_t *nic = nic_list;
+    for (int i = 0; i < nic_number; i++) {
+        nic = nic->next;
+    }
+
+    Logger::GetInstance()->Debug("Attempting to open " + string(nic->name));
+    if ((nic_handle = pcap_open(nic->name, 65536, PCAP_OPENFLAG_PROMISCUOUS, 1000, NULL, error_buffer)) == NULL) {
         Logger::GetInstance()->Error("Unable to open network adapter");
         return false;
     }
-
     pcap_setnonblock(nic_handle, 1, error_buffer);
 
     Logger::GetInstance()->Info("Successfully opened network adapter");
     return true;
 }
 
-//void NetDriver::ToggleCapture(char *nic_name) {
-void NetDriver::ToggleCapture(int nic_number) {
-    Logger::GetInstance()->Info("Toggling capture");
-    //logger->Info(nic_name);
-
-    pcap_if_t *nic = nic_list;
-    for (int i = 0; i < nic_number; i++) {
-        nic = nic->next;
-    }
-
-    NicOpen(nic->name);
-
-    //pcap_loop(nic_handle, 0, Packet_Handler, NULL);
-    //Get_Packets();
-}
-
 void NetDriver::GetPackets() {
-    //Logger::GetInstance()->Debug("Getting packets");
+    //Logger::GetInstance()->Debug("Getting packets via pcap_dispatch");
     pcap_dispatch(nic_handle, -1, PacketHandler, NULL);
-    //Logger::GetInstance()->Debug("Got packets");
+    //Logger::GetInstance()->Debug("Returned from pcap_dispatch");
 }
 
 void NetDriver::PacketHandler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data) {
@@ -94,10 +81,14 @@ void NetDriver::PacketHandler(u_char *param, const struct pcap_pkthdr *header, c
     stringstream hexstream;
     hexstream << setw(2) << setfill('0') << hex << int(*ethertype_high);
     hexstream << setw(2) << setfill('0') << hex << int(*ethertype_low);
-    Logger::GetInstance()->Test("Ethertype or 802.3 length: 0x" + hexstream.str());
-    Logger::GetInstance()->Test("Packet length: " + to_string(header->len));
+    Logger::GetInstance()->Info("Ethertype or 802.3 length: 0x" + hexstream.str());
+    Logger::GetInstance()->Info("Packet length: " + to_string(header->len));
 
     // packet length doesn't count 8 byte preamble, 4 byte CRC, 12 byte interpacket gap
+
+    // TODO: capture timestamp
+    // TODO: For IP packets, capture IP addresses
+    // TODO: For TCP/UDP packets capture port numbers
 }
 
 

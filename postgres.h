@@ -8,6 +8,11 @@
 class Postgres {
     public:
         Postgres();
+        ~Postgres();
+        bool CreateTable();
+
+    private:
+        PGconn *pg_connection;
 };
 
 #endif

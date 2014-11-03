@@ -91,6 +91,7 @@ void Frame::OnMenuQuit(wxCommandEvent &WXUNUSED(event)) {
 
 void Frame::OnPanelCapture(wxCommandEvent &WXUNUSED(event)) {
     // TODO: stop timer if running
+    postgres->CreateTable();
     net_driver->OpenNic(nic_choice->GetSelection());
     // TODO: check for success acquiring timer
     capture_timer->Start(1, true);
@@ -98,7 +99,7 @@ void Frame::OnPanelCapture(wxCommandEvent &WXUNUSED(event)) {
 }
 
 void Frame::OnTimerCapture(wxTimerEvent &WXUNUSED(event)) {
-    Logger::GetInstance()->Debug("Timer fired!\n");
+    //Logger::GetInstance()->Debug("Timer fired!\n");
     net_driver->GetPackets();
     // TODO: keep getting packets until some amount of time has passed
     capture_timer->Start(100, true);

@@ -13,6 +13,7 @@
 #include <vector>
 using namespace std;
 
+#include "postgres.h"
 #include "logger.h"
 
 /* 4 bytes IP address */
@@ -44,6 +45,7 @@ class NetDriver {
         NetDriver();
         ~NetDriver();
 
+        static void ConnectToDB();
         vector<string> GetNicNames();
         bool OpenNic(int nic_number);
         void GetPackets();

@@ -8,9 +8,10 @@ NetDriver::NetDriver() {
 
 NetDriver::~NetDriver() {
     FreeNicList();
+
+    Postgres::GetInstance()->Release();
 }
 
-//char **NetDriver::GetNicNames() {
 vector<string> NetDriver::GetNicNames() {
     vector<string> nic_names;
 
@@ -18,28 +19,20 @@ vector<string> NetDriver::GetNicNames() {
         return nic_names;
     }
 
-    //nic_names = new char*[10];
-    //char **nic_names_pointer = nic_names;
-
 	for (pcap_if_t *nic = nic_list; nic; nic = nic->next) {
 		if (nic->description) {
             nic_names.push_back(nic->description);
-            //*nic_names_pointer = nic->description;
-            //*nic_names_pointer = nic->name;
 			Logger::GetInstance()->Debug(nic->description);
-		} /*else {
-            *nic_names_pointer = nic->name;
+		} else {
+            nic_names.push_back(nic->name);
 			Logger::GetInstance()->Debug("No NIC description available");
 		}
-        nic_names_pointer++;*/
 	}
 
     return nic_names;
 }
 
 void NetDriver::GetNicList() {
-    //char error_buffer[PCAP_ERRBUF_SIZE];
-
 	if (pcap_findalldevs_ex(PCAP_SRC_IF_STRING, NULL, &nic_list, error_buffer) == -1) {
 		Logger::GetInstance()->Error("Failed to retrieve network card list!");
         pcap_freealldevs(nic_list);
@@ -48,10 +41,11 @@ void NetDriver::GetNicList() {
 
 void NetDriver::FreeNicList() {
     pcap_freealldevs(nic_list);
-    //delete nic_names;
 }
 
 bool NetDriver::OpenNic(int nic_number) {
+    Postgres::GetInstance()->CreateTable();
+
     pcap_if_t *nic = nic_list;
     for (int i = 0; i < nic_number; i++) {
         nic = nic->next;
@@ -89,6 +83,8 @@ void NetDriver::PacketHandler(u_char *param, const struct pcap_pkthdr *header, c
     // TODO: capture timestamp
     // TODO: For IP packets, capture IP addresses
     // TODO: For TCP/UDP packets capture port numbers
+
+    Postgres::GetInstance()->SavePacketData();
 }
 
 

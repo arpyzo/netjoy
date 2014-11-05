@@ -7,11 +7,18 @@
 /********************************** Postgres **********************************/
 class Postgres {
     public:
-        Postgres();
-        ~Postgres();
+        static Postgres *GetInstance();
+        static void Release();
+
         bool CreateTable();
+        void SavePacketData();
 
     private:
+        Postgres();
+        ~Postgres();
+
+        static Postgres *postgres_instance;
+
         PGconn *pg_connection;
 };
 

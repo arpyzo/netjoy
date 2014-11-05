@@ -1,6 +1,8 @@
 #include "debug.h"
 #include "postgres.h"
 
+Postgres *Postgres::postgres_instance = NULL;
+
 /********************************** Postgres **********************************/
 Postgres::Postgres() {
     pg_connection = PQconnectdb("hostaddr = '127.0.0.1' port = '' dbname = 'test' user = 'postgres' password = 'postgres' connect_timeout = '10'");
@@ -26,6 +28,23 @@ bool Postgres::CreateTable() {
     return true;
 }
 
+Postgres *Postgres::GetInstance() {
+    if (!postgres_instance) {
+        postgres_instance = new Postgres();
+    }
+    return postgres_instance;
+}
+
+void Postgres::Release() {
+    if (postgres_instance) {
+        delete postgres_instance;
+    }
+}
+
+void Postgres::SavePacketData() {
+    Logger::GetInstance()->Debug("SAVE PACKET CALLED");
+}
+
 Postgres::~Postgres() {
-    // TODO: Close connection
+    PQfinish(pg_connection);
 }

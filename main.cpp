@@ -44,8 +44,6 @@ Frame::Frame()
     SetupLogger(logger_text_ctrl);
 
     SetupNetInterface();
-
-    SetupPostgres();
 }
 
 void Frame::SetupNetInterface() {
@@ -57,10 +55,6 @@ void Frame::SetupNetInterface() {
         nic_choice->Append(*it);
     }
     nic_choice->SetSelection(0);
-}
-
-void Frame::SetupPostgres() {
-    postgres = new Postgres();
 }
 
 void Frame::SetupMenu() {
@@ -91,7 +85,6 @@ void Frame::OnMenuQuit(wxCommandEvent &WXUNUSED(event)) {
 
 void Frame::OnPanelCapture(wxCommandEvent &WXUNUSED(event)) {
     // TODO: stop timer if running
-    postgres->CreateTable();
     net_driver->OpenNic(nic_choice->GetSelection());
     // TODO: check for success acquiring timer
     capture_timer->Start(1, true);
@@ -108,7 +101,6 @@ void Frame::OnTimerCapture(wxTimerEvent &WXUNUSED(event)) {
 Frame::~Frame() {
     delete capture_timer;
     delete net_driver;
-    delete postgres;
     Logger::Release();
 }
 

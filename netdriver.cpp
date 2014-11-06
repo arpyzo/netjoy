@@ -69,14 +69,14 @@ void NetDriver::GetPackets() {
 }
 
 void NetDriver::PacketHandler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data) {
-    u_char *ethertype_high = (u_char *) (pkt_data + 12);
-    u_char *ethertype_low = (u_char *) (pkt_data + 13);
+    u_short ethertype = *(pkt_data + 12) << 8 | *(pkt_data + 13);
 
     stringstream hexstream;
-    hexstream << setw(2) << setfill('0') << hex << int(*ethertype_high);
-    hexstream << setw(2) << setfill('0') << hex << int(*ethertype_low);
+    hexstream << setw(4) << setfill('0') << hex << int(ethertype);
     Logger::GetInstance()->Info("Ethertype or 802.3 length: 0x" + hexstream.str());
+
     Logger::GetInstance()->Info("Packet length: " + to_string(header->len));
+    Logger::GetInstance()->Info("Packet timestamp: " + to_string(header->ts.tv_sec) + "." + to_string(header->ts.tv_usec));
 
     // packet length doesn't count 8 byte preamble, 4 byte CRC, 12 byte interpacket gap
 

@@ -11,7 +11,7 @@ class Postgres {
         static void Release();
 
         bool CreateTable();
-        void SavePacketData();
+        void SavePacketData(long time_sec, long time_usec, unsigned short ethertype, unsigned int length);
 
     private:
         Postgres();

@@ -84,7 +84,7 @@ void NetDriver::PacketHandler(u_char *param, const struct pcap_pkthdr *header, c
     // TODO: For IP packets, capture IP addresses
     // TODO: For TCP/UDP packets capture port numbers
 
-    Postgres::GetInstance()->SavePacketData();
+    Postgres::GetInstance()->SavePacketData(header->ts.tv_sec, header->ts.tv_usec, ethertype, header->len);
 }
 
 

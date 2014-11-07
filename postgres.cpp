@@ -41,8 +41,17 @@ void Postgres::Release() {
     }
 }
 
-void Postgres::SavePacketData() {
-    Logger::GetInstance()->Debug("SAVE PACKET CALLED");
+void Postgres::SavePacketData(long time_sec, long time_usec, unsigned short ethertype, unsigned int length) {
+    //Logger::GetInstance()->Debug("Save packet called");
+    string insert_query = "INSERT INTO netjoy_test (timestamp, packet_type, packet_length) VALUES (" + to_string(time_usec) + "," + to_string(ethertype) + "," + to_string(length) + ")";
+    PGresult *pg_result = PQexec(pg_connection, insert_query.c_str());
+
+    if (PQresultStatus(pg_result) != PGRES_COMMAND_OK) {
+        Logger::GetInstance()->Error("INSERT packet failed: " + string(PQerrorMessage(pg_connection)));
+    }
+
+    PQclear(pg_result);
+    PQexec(pg_connection, "COMMIT");
 }
 
 Postgres::~Postgres() {

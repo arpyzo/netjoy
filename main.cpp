@@ -84,14 +84,28 @@ void Frame::OnMenuQuit(wxCommandEvent &WXUNUSED(event)) {
 }
 
 void Frame::OnPanelCapture(wxCommandEvent &WXUNUSED(event)) {
-    // TODO: stop timer if running
-    net_driver->OpenNic(nic_choice->GetSelection());
+    if (capture_active) {
+        capture_active = false;
+        return;
+    }
+
+    if (!net_driver->OpenNic(nic_choice->GetSelection())) {
+        Logger::GetInstance()->Error("Capture timer not started!\n");
+        return;
+    }
+    capture_active = true;
+
     // TODO: check for success acquiring timer
     capture_timer->Start(1, true);
-    Logger::GetInstance()->Debug("Timer started.\n");
+    Logger::GetInstance()->Debug("Capture timer started.\n");
 }
 
 void Frame::OnTimerCapture(wxTimerEvent &WXUNUSED(event)) {
+    if (!capture_active) {
+        net_driver->CloseNic();
+        return;
+    }
+
     //Logger::GetInstance()->Debug("Timer fired!\n");
     net_driver->GetPackets();
     // TODO: keep getting packets until some amount of time has passed

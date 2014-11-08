@@ -24,6 +24,7 @@ void Logger::SetOutput(wxTextCtrl *output) {
     this->output = output;
 }
 //TODO: Set different font colors
+//TODO: Add multiple debug levels
 void Logger::Debug(string message) {
     output->AppendText(message + "\n");
 }

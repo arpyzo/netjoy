@@ -25,7 +25,7 @@ vector<string> NetDriver::GetNicNames() {
 			Logger::GetInstance()->Debug(nic->description);
 		} else {
             nic_names.push_back(nic->name);
-			Logger::GetInstance()->Debug("No NIC description available");
+			Logger::GetInstance()->Debug("No NIC description available.");
 		}
 	}
 
@@ -53,13 +53,18 @@ bool NetDriver::OpenNic(int nic_number) {
 
     Logger::GetInstance()->Debug("Attempting to open " + string(nic->name));
     if ((nic_handle = pcap_open(nic->name, 65536, PCAP_OPENFLAG_PROMISCUOUS, 1000, NULL, error_buffer)) == NULL) {
-        Logger::GetInstance()->Error("Unable to open network adapter");
+        Logger::GetInstance()->Error("Unable to open network adapter!");
         return false;
     }
     pcap_setnonblock(nic_handle, 1, error_buffer);
 
-    Logger::GetInstance()->Info("Successfully opened network adapter");
+    Logger::GetInstance()->Info("Successfully opened network adapter.");
     return true;
+}
+
+void NetDriver::CloseNic() {
+    pcap_close(nic_handle);
+    Logger::GetInstance()->Info("Closed network adapter.");
 }
 
 void NetDriver::GetPackets() {

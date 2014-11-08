@@ -48,6 +48,7 @@ class NetDriver {
         static void ConnectToDB();
         vector<string> GetNicNames();
         bool OpenNic(int nic_number);
+        void CloseNic();
         void GetPackets();
 
         static void PacketHandler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data);

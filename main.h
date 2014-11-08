@@ -36,6 +36,8 @@ class Frame: public wxFrame {
         wxButton *capture_button;
         wxTimer *capture_timer;
 
+        bool capture_active = false;
+
     DECLARE_EVENT_TABLE()
 };
 

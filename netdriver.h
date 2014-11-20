@@ -51,7 +51,7 @@ class NetDriver {
         void CloseNic();
         void GetPackets();
 
-        static void PacketHandler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data);
+        static void PacketHandler(unsigned char *param, const struct pcap_pkthdr *header, const unsigned char *pkt_data);
 
     private:
         void GetNicList();

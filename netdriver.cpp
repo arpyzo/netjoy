@@ -82,44 +82,25 @@ void NetDriver::PacketHandler(unsigned char *param, const struct pcap_pkthdr *he
     hexstream << setw(4) << setfill('0') << hex << int(ethertype);
     Logger::GetInstance()->Info("Ethertype or 802.3 length: 0x" + hexstream.str());
 
-    //Logger::GetInstance()->Info("Packet length: " + to_string(header->len));
-    //Logger::GetInstance()->Info("Packet timestamp: " + to_string(header->ts.tv_sec) + "." + to_string(header->ts.tv_usec));
+    Logger::GetInstance()->Info("Packet length: " + to_string(header->len));
+    Logger::GetInstance()->Info("Packet timestamp: " + to_string(header->ts.tv_sec) + "." + to_string(header->ts.tv_usec));
 
     if (ethertype == 0x0800) {
-        // 167772165 
-        //source_ip = *(pkt_data + 26) << 24 | *(pkt_data + 27) << 16 | *(pkt_data + 28) << 8 | *(pkt_data + 29);
-        //destination_ip = *(pkt_data + 30) << 24 | *(pkt_data + 31) << 16 | *(pkt_data + 32) << 8 | *(pkt_data + 33);
-        source_ip = (unsigned int)*(pkt_data + 26);
-        destination_ip = (unsigned int)*(pkt_data + 30);
-
-        unsigned char ip1 = *(pkt_data + 26);
-        unsigned char ip2 = *(pkt_data + 27);
-        unsigned char ip3 = *(pkt_data + 28);
-        unsigned char ip4 = *(pkt_data + 29);
-
-        unsigned char ip5 = *(pkt_data + 30);
-        unsigned char ip6 = *(pkt_data + 31);
-        unsigned char ip7 = *(pkt_data + 32);
-        unsigned char ip8 = *(pkt_data + 33);
-
-        Logger::GetInstance()->Info("Source IP: " + to_string(ip1) + "." + to_string(ip2) + "." + to_string(ip3) + "." + to_string(ip4));
-        Logger::GetInstance()->Info("Destination IP: " + to_string(ip5) + "." + to_string(ip6) + "." + to_string(ip7) + "." + to_string(ip8));
+        source_ip = *(pkt_data + 26) << 24 | *(pkt_data + 27) << 16 | *(pkt_data + 28) << 8 | *(pkt_data + 29);
+        destination_ip = *(pkt_data + 30) << 24 | *(pkt_data + 31) << 16 | *(pkt_data + 32) << 8 | *(pkt_data + 33);
 
         Logger::GetInstance()->Info("Source IP: " + to_string(source_ip));
         Logger::GetInstance()->Info("Destination IP: " + to_string(destination_ip));
     }
 
-    //Logger::GetInstance()->Info("LONG " + to_string(sizeof(long)));
-    //Logger::GetInstance()->Info("SHORT " + to_string(sizeof(short)));
-    //Logger::GetInstance()->Info("INT " + to_string(sizeof(int)));
-
     // packet length doesn't count 8 byte preamble, 4 byte CRC, 12 byte interpacket gap
 
     // TODO: capture timestamp
-    // TODO: For IP packets, capture IP addresses
+    // TODO: For IP packets, capture IP addresses (including vlan packets)
     // TODO: For TCP/UDP packets capture port numbers
 
-    Postgres::GetInstance()->SavePacketData(header->ts.tv_sec, header->ts.tv_usec, ethertype, header->len);
+    Logger::GetInstance()->Info("");
+    Postgres::GetInstance()->SavePacketData(header->ts.tv_sec, header->ts.tv_usec, header->len, ethertype, source_ip, destination_ip);
 }
 
 

@@ -51,8 +51,11 @@ void Frame::SetupNetInterface() {
 
     vector<string> nic_names = net_driver->GetNicNames();
     for (vector<string>::iterator it = nic_names.begin(); it != nic_names.end(); ++it) {
-        // TODO: Strip out unnecessary test from name
-        nic_choice->Append(*it);
+        if (it->find("Network adapter") != string::npos && it->find("on local host") != string::npos) {
+            nic_choice->Append(it->substr(17, it->length() - 32));
+        } else {
+            nic_choice->Append(*it);
+        }
     }
     nic_choice->SetSelection(0);
 }
@@ -86,6 +89,7 @@ void Frame::OnMenuQuit(wxCommandEvent &WXUNUSED(event)) {
 void Frame::OnPanelCapture(wxCommandEvent &WXUNUSED(event)) {
     if (capture_active) {
         capture_active = false;
+        capture_button->SetLabel("Start");
         return;
     }
 
@@ -94,6 +98,7 @@ void Frame::OnPanelCapture(wxCommandEvent &WXUNUSED(event)) {
         return;
     }
     capture_active = true;
+    capture_button->SetLabel("Stop");
 
     // TODO: check for success acquiring timer
     capture_timer->Start(1, true);

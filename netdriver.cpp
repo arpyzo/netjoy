@@ -77,6 +77,8 @@ void NetDriver::PacketHandler(unsigned char *param, const struct pcap_pkthdr *he
     unsigned short ethertype = *(pkt_data + 12) << 8 | *(pkt_data + 13);
     unsigned int source_ip = 0;
     unsigned int destination_ip = 0;
+    unsigned short source_port = 0;
+    unsigned short destination_port = 0;
 
     stringstream hexstream;
     hexstream << setw(4) << setfill('0') << hex << int(ethertype);
@@ -91,6 +93,14 @@ void NetDriver::PacketHandler(unsigned char *param, const struct pcap_pkthdr *he
 
         Logger::GetInstance()->Info("Source IP: " + to_string(source_ip));
         Logger::GetInstance()->Info("Destination IP: " + to_string(destination_ip));
+
+        // Check for TCP or UDP
+        // Calculate address based on IHL
+        source_port = *(pkt_data + 34) << 8 | *(pkt_data + 35);
+        destination_port = *(pkt_data + 36) << 8 | *(pkt_data + 37);
+
+        Logger::GetInstance()->Info("Source Port: " + to_string(source_port));
+        Logger::GetInstance()->Info("Destination Port: " + to_string(destination_port));
     }
 
     // packet length doesn't count 8 byte preamble, 4 byte CRC, 12 byte interpacket gap
@@ -100,7 +110,7 @@ void NetDriver::PacketHandler(unsigned char *param, const struct pcap_pkthdr *he
     // TODO: For TCP/UDP packets capture port numbers
 
     Logger::GetInstance()->Info("");
-    Postgres::GetInstance()->SavePacketData(header->ts.tv_sec, header->ts.tv_usec, header->len, ethertype, source_ip, destination_ip);
+    Postgres::GetInstance()->SavePacketData(header->ts.tv_sec, header->ts.tv_usec, header->len, ethertype, source_ip, destination_ip, source_port, destination_port);
 }
 
 

@@ -91,8 +91,10 @@ void NetDriver::PacketHandler(unsigned char *param, const struct pcap_pkthdr *he
         source_ip = *(pkt_data + 26) << 24 | *(pkt_data + 27) << 16 | *(pkt_data + 28) << 8 | *(pkt_data + 29);
         destination_ip = *(pkt_data + 30) << 24 | *(pkt_data + 31) << 16 | *(pkt_data + 32) << 8 | *(pkt_data + 33);
 
-        Logger::GetInstance()->Info("Source IP: " + to_string(source_ip));
-        Logger::GetInstance()->Info("Destination IP: " + to_string(destination_ip));
+        Logger::GetInstance()->Info("Source IP: " + to_string(source_ip >> 24) + "." + to_string((source_ip >> 16 ) & 0xff) +
+                                    "." + to_string((source_ip >> 8) & 0xff) + "." + to_string(source_ip & 0xff));
+        Logger::GetInstance()->Info("Destination IP: " + to_string(destination_ip >> 24) + "." + to_string((destination_ip >> 16 ) & 0xff) +
+                                    "." + to_string((destination_ip >> 8) & 0xff) + "." + to_string(destination_ip & 0xff));
 
         // Check for TCP or UDP
         // Calculate address based on IHL

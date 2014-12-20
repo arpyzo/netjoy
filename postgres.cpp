@@ -17,7 +17,7 @@ Postgres::Postgres() {
 
 bool Postgres::CreateTable() {
     PGresult *pg_result = PQexec(pg_connection, "CREATE TABLE if not exists netjoy_test(id SERIAL NOT NULL, timestamp INT NOT NULL, packet_length INT NOT NULL," 
-                                                    "ethertype INT NOT NULL, source_ip BIGINT, destination_ip BIGINT, source_port INT, destination_port INT, PRIMARY KEY(id))");
+                                                    "ethertype INT NOT NULL, source_ip INET, destination_ip INET, source_port INT, destination_port INT, PRIMARY KEY(id))");
     if (PQresultStatus(pg_result) != PGRES_COMMAND_OK) {
         Logger::GetInstance()->Error("CREATE TABLE failed: " + string(PQerrorMessage(pg_connection)));
         PQclear(pg_result);
@@ -44,12 +44,11 @@ void Postgres::Release() {
     }
 }
 
-void Postgres::SavePacketData(long time_sec, long time_usec, unsigned int length, unsigned short ethertype, unsigned int source_ip, unsigned int destination_ip, unsigned short source_port, unsigned short destination_port) {
+void Postgres::SavePacketData(long time_sec, long time_usec, unsigned int length, unsigned short ethertype, string source_ip, string destination_ip, unsigned short source_port, unsigned short destination_port) {
     //Logger::GetInstance()->Debug("Save packet called");
     string insert_query = "INSERT INTO netjoy_test (timestamp, packet_length, ethertype, source_ip, destination_ip, source_port, destination_port)"
-                            "VALUES (" + to_string(time_sec) + "," + to_string(ethertype) + "," + to_string(length) + "," 
-                                        + to_string(source_ip) + "," + to_string(destination_ip) + ","
-                                        + to_string(source_port) + "," + to_string(destination_port) + ")";
+                            "VALUES (" + to_string(time_sec) + "," + to_string(ethertype) + "," + to_string(length)
+                                       + ",'" + source_ip + "','" + destination_ip + "'," + to_string(source_port) + "," + to_string(destination_port) + ")";
     PGresult *pg_result = PQexec(pg_connection, insert_query.c_str());
 
     if (PQresultStatus(pg_result) != PGRES_COMMAND_OK) {

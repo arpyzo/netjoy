@@ -75,12 +75,12 @@ void NetDriver::GetPackets() {
 
 void NetDriver::PacketHandler(unsigned char *param, const struct pcap_pkthdr *header, const unsigned char *pkt_data) {
     unsigned short ethertype = *(pkt_data + 12) << 8 | *(pkt_data + 13);
-    unsigned int source_ip = 0;
-    unsigned int destination_ip = 0;
+    string source_ip = "0.0.0.0";
+    string destination_ip = "0.0.0.0";
     unsigned short source_port = 0;
     unsigned short destination_port = 0;
-
     stringstream hexstream;
+
     hexstream << setw(4) << setfill('0') << hex << int(ethertype);
     Logger::GetInstance()->Info("Ethertype or 802.3 length: 0x" + hexstream.str());
 
@@ -88,13 +88,16 @@ void NetDriver::PacketHandler(unsigned char *param, const struct pcap_pkthdr *he
     Logger::GetInstance()->Info("Packet timestamp: " + to_string(header->ts.tv_sec) + "." + to_string(header->ts.tv_usec));
 
     if (ethertype == 0x0800) {
-        source_ip = *(pkt_data + 26) << 24 | *(pkt_data + 27) << 16 | *(pkt_data + 28) << 8 | *(pkt_data + 29);
-        destination_ip = *(pkt_data + 30) << 24 | *(pkt_data + 31) << 16 | *(pkt_data + 32) << 8 | *(pkt_data + 33);
+        stringstream sstream;
+        sstream << (int)(*(pkt_data + 26)) << "." << (int)(*(pkt_data + 27)) << "." << (int)(*(pkt_data + 28)) << "." << (int)(*(pkt_data + 29));
+        source_ip = sstream.str();
 
-        Logger::GetInstance()->Info("Source IP: " + to_string(source_ip >> 24) + "." + to_string((source_ip >> 16 ) & 0xff) +
-                                    "." + to_string((source_ip >> 8) & 0xff) + "." + to_string(source_ip & 0xff));
-        Logger::GetInstance()->Info("Destination IP: " + to_string(destination_ip >> 24) + "." + to_string((destination_ip >> 16 ) & 0xff) +
-                                    "." + to_string((destination_ip >> 8) & 0xff) + "." + to_string(destination_ip & 0xff));
+        sstream.str(std::string());
+        sstream << (int)(*(pkt_data + 30)) << "." << (int)(*(pkt_data + 31)) << "." << (int)(*(pkt_data + 32)) << "." << (int)(*(pkt_data + 33));
+        destination_ip = sstream.str();
+
+        Logger::GetInstance()->Info("Source IP: " + source_ip);
+        Logger::GetInstance()->Info("Destination IP: " + destination_ip);
 
         // Check for TCP or UDP
         // Calculate address based on IHL

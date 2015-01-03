@@ -75,11 +75,18 @@ void NetDriver::GetPackets() {
 
 void NetDriver::PacketHandler(unsigned char *param, const struct pcap_pkthdr *header, const unsigned char *pkt_data) {
     unsigned short ethertype = *(pkt_data + 12) << 8 | *(pkt_data + 13);
+    unsigned short vlan = 0;
     string source_ip = "0.0.0.0";
     string destination_ip = "0.0.0.0";
     unsigned short source_port = 0;
     unsigned short destination_port = 0;
     stringstream hexstream;
+
+    if (ethertype == 0x8100) {
+        Logger::GetInstance()->Info("VLAN packet");
+        ethertype = *(pkt_data + 16) << 8 | *(pkt_data + 17);
+        vlan = 4;
+    }
 
     hexstream << setw(4) << setfill('0') << hex << int(ethertype);
     Logger::GetInstance()->Info("Ethertype or 802.3 length: 0x" + hexstream.str());
@@ -88,19 +95,23 @@ void NetDriver::PacketHandler(unsigned char *param, const struct pcap_pkthdr *he
     Logger::GetInstance()->Info("Packet timestamp: " + to_string(header->ts.tv_sec) + "." + to_string(header->ts.tv_usec));
 
     if (ethertype == 0x0800) {
+        const unsigned char *ip_start = pkt_data + vlan + 26;
+
         stringstream sstream;
-        sstream << (int)(*(pkt_data + 26)) << "." << (int)(*(pkt_data + 27)) << "." << (int)(*(pkt_data + 28)) << "." << (int)(*(pkt_data + 29));
+        //sstream << (int)(*(pkt_data + 26)) << "." << (int)(*(pkt_data + 27)) << "." << (int)(*(pkt_data + 28)) << "." << (int)(*(pkt_data + 29));
+        sstream << (int)(*(ip_start)) << "." << (int)(*(ip_start + 1)) << "." << (int)(*(ip_start + 2)) << "." << (int)(*(ip_start + 3));
         source_ip = sstream.str();
 
         sstream.str(std::string());
-        sstream << (int)(*(pkt_data + 30)) << "." << (int)(*(pkt_data + 31)) << "." << (int)(*(pkt_data + 32)) << "." << (int)(*(pkt_data + 33));
+        //sstream << (int)(*(pkt_data + 30)) << "." << (int)(*(pkt_data + 31)) << "." << (int)(*(pkt_data + 32)) << "." << (int)(*(pkt_data + 33));
+        sstream << (int)(*(ip_start + 4)) << "." << (int)(*(ip_start + 5)) << "." << (int)(*(ip_start + 6)) << "." << (int)(*(ip_start + 7));
         destination_ip = sstream.str();
 
         Logger::GetInstance()->Info("Source IP: " + source_ip);
         Logger::GetInstance()->Info("Destination IP: " + destination_ip);
 
-        // Check for TCP or UDP
-        // Calculate address based on IHL
+        // TODO: Check for TCP or UDP
+        // TODO: Calculate address based on IHL
         source_port = *(pkt_data + 34) << 8 | *(pkt_data + 35);
         destination_port = *(pkt_data + 36) << 8 | *(pkt_data + 37);
 
@@ -109,10 +120,6 @@ void NetDriver::PacketHandler(unsigned char *param, const struct pcap_pkthdr *he
     }
 
     // packet length doesn't count 8 byte preamble, 4 byte CRC, 12 byte interpacket gap
-
-    // TODO: capture timestamp
-    // TODO: For IP packets, capture IP addresses (including vlan packets)
-    // TODO: For TCP/UDP packets capture port numbers
 
     Logger::GetInstance()->Info("");
     Postgres::GetInstance()->SavePacketData(header->ts.tv_sec, header->ts.tv_usec, header->len, ethertype, source_ip, destination_ip, source_port, destination_port);

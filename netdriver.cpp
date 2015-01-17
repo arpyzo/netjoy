@@ -52,6 +52,7 @@ bool NetDriver::OpenNic(int nic_number) {
     }
 
     Logger::GetInstance()->Debug("Attempting to open " + string(nic->name));
+    // TODO: Calculate minimum capture amount
     if ((nic_handle = pcap_open(nic->name, 65536, PCAP_OPENFLAG_PROMISCUOUS, 1000, NULL, error_buffer)) == NULL) {
         Logger::GetInstance()->Error("Unable to open network adapter!");
         return false;
@@ -112,8 +113,18 @@ void NetDriver::PacketHandler(unsigned char *param, const struct pcap_pkthdr *he
 
         // TODO: Check for TCP or UDP
         // TODO: Calculate address based on IHL
-        source_port = *(pkt_data + 34) << 8 | *(pkt_data + 35);
-        destination_port = *(pkt_data + 36) << 8 | *(pkt_data + 37);
+        const unsigned char *ihl = pkt_data + vlan + 14;
+
+        sstream.str(std::string());
+        sstream << (int)(*(ihl) & 0xf);
+        Logger::GetInstance()->Info("IHL: " + sstream.str());
+
+        const unsigned char *port_start = pkt_data + vlan + 14 + (*(ihl) & 0xf) * 4;
+
+        //source_port = *(pkt_data + 34) << 8 | *(pkt_data + 35);
+        //destination_port = *(pkt_data + 36) << 8 | *(pkt_data + 37);
+        source_port = *(port_start) << 8 | *(port_start + 1);
+        destination_port = *(port_start + 2) << 8 | *(port_start + 3);
 
         Logger::GetInstance()->Info("Source Port: " + to_string(source_port));
         Logger::GetInstance()->Info("Destination Port: " + to_string(destination_port));

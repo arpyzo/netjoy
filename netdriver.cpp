@@ -52,8 +52,8 @@ bool NetDriver::OpenNic(int nic_number) {
     }
 
     Logger::GetInstance()->Debug("Attempting to open " + string(nic->name));
-    // TODO: Calculate minimum capture amount
-    if ((nic_handle = pcap_open(nic->name, 65536, PCAP_OPENFLAG_PROMISCUOUS, 1000, NULL, error_buffer)) == NULL) {
+    // Capture length: 14 ethernet header, 4 single vlan, ip header up to 60, 4 tcp/udp port numbers
+    if ((nic_handle = pcap_open(nic->name, 65536, PCAP_OPENFLAG_PROMISCUOUS, 82, NULL, error_buffer)) == NULL) {
         Logger::GetInstance()->Error("Unable to open network adapter!");
         return false;
     }
